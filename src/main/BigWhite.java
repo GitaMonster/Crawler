@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,18 +25,17 @@ public class BigWhite {
 	
 	public static void main(String[] args) throws Exception {
 		HotelAvailability avail = getAvailability();
-		for (Entry<Calendar, Boolean> entry : avail.getRoomAvailabilities().get("1206").getTotalAvailability().entrySet()) {
-			Calendar day = entry.getKey();
-			System.out.println(day.get(Calendar.MONTH) + " " + day.get(Calendar.DAY_OF_MONTH) + ", " + day.get(Calendar.YEAR));
-			System.out.println("Available? " + entry.getValue());
-			System.out.println();
+		for (Entry<Calendar, Boolean> entry : avail.getRoomAvailabilities().get("1408").getTotalAvailability().entrySet()) {
+			if (entry.getValue() == null) {
+				System.out.println("null");
+			}
 		}
 	}
 
 	public static HotelAvailability getAvailability() throws MalformedURLException, IOException {
 		BigWhiteParser parser = new BigWhiteParser();
 		Map<String, RoomAvailability> roomAvailabilities = new HashMap<String, RoomAvailability>();
-		
+
 		for (String roomNumber : ROOM_NUMBERS) {
 			String url = "http://irmestore.bigwhite.com/irmnet/res/RoomDetailsPage.aspx?Resort=01&PropertyCode=SB&RoomNum=SB" + roomNumber + "&Arrival=01/03/18";
 			String page = getPage(url);
