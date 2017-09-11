@@ -51,7 +51,7 @@ public class BigWhiteParser implements HotelParser {
 			currentIndex = pageText.indexOf(identifier, currentIndex + 1);
 			
 			Calendar specificDate = new GregorianCalendar(year, month, day);
-			availability.put(specificDate, true);
+			availability.put(specificDate, markAsAvailable);
 		}
 	}
 }

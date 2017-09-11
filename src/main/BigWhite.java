@@ -18,19 +18,16 @@ import model.HotelAvailability;
 import model.HotelName;
 import model.RoomAvailability;
 import parser.BigWhiteParser;
+import util.ExcelWriter;
 
 public class BigWhite {
 	
-	private static String[] ROOM_NUMBERS = {"1206", "1408"};
+	private static String[] ROOM_NUMBERS = {"1206", "1408", "1301"};
 	
 	public static void main(String[] args) throws Exception {
 		HotelAvailability avail = getAvailability();
-		for (Entry<Calendar, Boolean> entry : avail.getRoomAvailabilities().get("1408").getTotalAvailability().entrySet()) {
-			if (entry.getValue() == null) {
-				System.out.println("null");
-			}
-		}
-	}
+        ExcelWriter.main(avail);
+    }
 
 	public static HotelAvailability getAvailability() throws MalformedURLException, IOException {
 		BigWhiteParser parser = new BigWhiteParser();

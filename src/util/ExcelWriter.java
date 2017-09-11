@@ -1,7 +1,5 @@
 package util;
 
-import javafx.application.Application;
-import javafx.scene.control.Cell;
 import jxl.Workbook;   //workbook is an abstract class with no static
 import jxl.write.Label;
 import jxl.write.WritableWorkbook;
@@ -19,7 +17,6 @@ import jxl.write.Number;
 import jxl.write.WriteException;
 import model.HotelAvailability;
 import model.RoomAvailability;
-//import jxl.format.Alignment;
 
 
 /**
@@ -127,7 +124,7 @@ public class ExcelWriter {
         int startingYear = yearMonth.getYear();
         for(int i=1 ; i<=daysInMonth ; i++) {
 
-            Calendar date = new GregorianCalendar(startingYear, yearMonth.getMonth().getValue(), i);  //year, month, day
+            Calendar date = new GregorianCalendar(startingYear, yearMonth.getMonth().getValue()-1, i);  //yearMonth uses 1-12 while gregorian calendar runs 0-11
 
             Map<Calendar, Boolean> totalAvailability = currentRoomAvailability.getTotalAvailability();
             Boolean availBoolean = totalAvailability.get(date);
