@@ -24,7 +24,7 @@ import model.RoomAvailability;
  */
 public class ExcelWriter {
 
-    private static final String EXCEL_FILE_LOCATION = "C:/Users/Chloe/Desktop/Crawling/ExcelOutput/BWA.xls";
+	private static final String EXCEL_FILE_LOCATION = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/BWA.xls";
 
     public static void main(HotelAvailability availability) throws Exception {
 
