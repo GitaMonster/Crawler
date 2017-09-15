@@ -1,6 +1,8 @@
 package model;
 
 import java.time.YearMonth;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 public class HotelAvailability {
@@ -37,6 +39,32 @@ public class HotelAvailability {
 	
 	public Map<YearMonth, HotelAvailabilityForMonth> getAvailabilityByMonth() {
 		return this.availabilityByMonth;
+	}
+	
+	public Calendar getEarliestKnownDate() {
+		
+		Calendar earliestKnownDate = new GregorianCalendar(3000, 1, 1);
+		
+		for (RoomAvailability ra : roomAvailabilities.values()) {
+			Calendar earliestDateForRoom = ra.getEarliestKnownDate();
+			if (earliestDateForRoom.before(earliestKnownDate)) {
+				earliestKnownDate = earliestDateForRoom;
+			}
+		}
+		return earliestKnownDate;
+	}
+	
+public Calendar getLatestKnownDate() {
+		
+		Calendar latestKnownDate = new GregorianCalendar(1900, 1, 1);
+		
+		for (RoomAvailability ra : roomAvailabilities.values()) {
+			Calendar latestDateForRoom = ra.getLatestKnownDate();
+			if (latestDateForRoom.before(latestKnownDate)) {
+				latestKnownDate = latestDateForRoom;
+			}
+		}
+		return latestKnownDate;
 	}
 
     @Override

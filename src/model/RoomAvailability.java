@@ -45,13 +45,13 @@ public class RoomAvailability {
 	}
 
 	public Calendar getLatestKnownDate() {
-		Calendar earliestDay = new GregorianCalendar(1900, 1, 1);
+		Calendar latestDay = new GregorianCalendar(1900, 1, 1);
 		for (Calendar day : totalAvailability.keySet()) {
-			if (day.after(earliestDay)) {
-				earliestDay = day;
+			if (day.after(latestDay)) {
+				latestDay = day;
 			}
 		}
-		return earliestDay;
+		return latestDay;
 	}
 
 	public Map<Calendar, Boolean> getAvailabilityForMonth(YearMonth month) {

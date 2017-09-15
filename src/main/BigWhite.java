@@ -28,6 +28,9 @@ public class BigWhite {
 		HotelAvailability avail = getAvailability();
         ExcelWriter.main(avail);
     }
+	
+	//each resort will have a unique starting date, not in the excel sheet, but for starting avail checking
+	//this class needs to contain something that tells it to 
 
 	public static HotelAvailability getAvailability() throws MalformedURLException, IOException {
 		BigWhiteParser parser = new BigWhiteParser();
