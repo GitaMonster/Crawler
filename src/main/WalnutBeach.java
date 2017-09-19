@@ -55,7 +55,7 @@ public class WalnutBeach {
 			roomAvailabilities.put(roomAvailability.getRoomNumber(), roomAvailability);
 		}
 
-		return new HotelAvailability(HotelName.WALNUT_BEACH, roomAvailabilities);
+		return new HotelAvailability(HotelName.WALNUT_BEACH_DEFAULT, roomAvailabilities);
 	}
 
 	public static String getPage(String urlString, String postBody) throws MalformedURLException, IOException {

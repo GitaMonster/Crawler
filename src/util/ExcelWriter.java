@@ -12,9 +12,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import jxl.write.Number;
 import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import model.HotelAvailability;
 import model.RoomAvailability;
 
@@ -118,7 +120,8 @@ public class ExcelWriter {
 
     }
 
-    private static void writeAvailabilityForMonth(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row, int startingColumn, YearMonth yearMonth)throws Exception {
+    private static void writeAvailabilityForMonth(WritableSheet excelSheet, RoomAvailability currentRoomAvailability,
+    		int row, int startingColumn, YearMonth yearMonth) throws RowsExceededException, WriteException {
 
         int daysInMonth = yearMonth.lengthOfMonth();
         int startingYear = yearMonth.getYear();
@@ -126,12 +129,19 @@ public class ExcelWriter {
 
             Calendar date = new GregorianCalendar(startingYear, yearMonth.getMonth().getValue()-1, i);  //yearMonth uses 1-12 while gregorian calendar runs 0-11
 
-            Map<Calendar, Boolean> totalAvailability = currentRoomAvailability.getTotalAvailability();
-            Boolean availBoolean = totalAvailability.get(date);
-            if (availBoolean == null) {
-                System.out.println("hi");
+            Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
+            Optional<Boolean> isAvailable = totalAvailability.get(date);
+            if (isAvailable == null) {
+                throw new RuntimeException("Error when writing to the excel sheet: "
+                		+ "a null value was returned for date " + DateUtils.getReadableDateString(date));
             }
-            Label dateavail = new Label(startingColumn -1 + i, row, availBoolean ? "Y" : "X");
+            String cellContent;
+            if (isAvailable.isPresent()) {
+            	cellContent = isAvailable.get() ? "Y" : "X";
+            } else {
+            	cellContent = " ";
+            }
+            Label dateavail = new Label(startingColumn -1 + i, row, cellContent);
             excelSheet.addCell(dateavail);
 
         }

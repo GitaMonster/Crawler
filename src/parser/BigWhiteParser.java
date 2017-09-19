@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import model.HotelAvailability;
 import model.RoomAvailability;
@@ -21,15 +22,15 @@ public class BigWhiteParser implements HotelParser {
 	@Override
 	public RoomAvailability parseSingleRoomAvailability(String pageText, String roomNumber) {
 
-		Map<Calendar, Boolean> availability = new HashMap<Calendar, Boolean>();
+		Map<Calendar, Optional<Boolean>> availability = new HashMap<Calendar, Optional<Boolean>>();
 
 		addDates(pageText, availability, VACANT_IDENTIFIER, true);
 		addDates(pageText, availability, OCCUPIED_IDENTIFIER, false);
-		addDates(pageText, availability, BLOCKED_IDENTIFIER, false);
+		addDates(pageText, availability, BLOCKED_IDENTIFIER, null);
 		return new RoomAvailability(roomNumber, availability);
 	}
 	
-	private void addDates(String pageText, Map<Calendar, Boolean> availability, String identifier, boolean markAsAvailable) {
+	private void addDates(String pageText, Map<Calendar, Optional<Boolean>> availability, String identifier, Boolean markAsAvailable) {
 		int currentIndex = pageText.indexOf(identifier);
 		while (currentIndex != -1) {
 			String dateData = pageText.substring(currentIndex - 12, currentIndex - 2);
@@ -49,9 +50,9 @@ public class BigWhiteParser implements HotelParser {
 			int day = Integer.parseInt(date[2]);
 
 			currentIndex = pageText.indexOf(identifier, currentIndex + 1);
-			
+
 			Calendar specificDate = new GregorianCalendar(year, month, day);
-			availability.put(specificDate, markAsAvailable);
+			availability.put(specificDate, markAsAvailable == null ? null : Optional.of(markAsAvailable));
 		}
 	}
 }
