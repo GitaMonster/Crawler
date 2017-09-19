@@ -2,6 +2,7 @@ package parser;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class WalnutBeachParser implements HotelParser {
 	
 	@Override
 	public RoomAvailability parseSingleRoomAvailability(String page, String roomNumber) throws IOException {
-		Map<Calendar, Boolean> totalRoomAvailability = new HashMap<Calendar, Boolean>();
+		Map<Calendar, Optional<Boolean>> totalRoomAvailability = new HashMap<Calendar, Optional<Boolean>>();
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode root = objectMapper.readTree(page);
 
@@ -37,7 +38,7 @@ public class WalnutBeachParser implements HotelParser {
 			int day = Integer.parseInt(dateParts[2]);
 
 			Calendar specificDate = new GregorianCalendar(year, month, day);
-			totalRoomAvailability.put(specificDate, isAvailable);
+			totalRoomAvailability.put(specificDate, Optional.of(isAvailable));
 		});
 		return new RoomAvailability(roomNumber, totalRoomAvailability);
 	}

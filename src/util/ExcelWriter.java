@@ -12,9 +12,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import jxl.write.Number;
 import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import model.HotelAvailability;
 import model.RoomAvailability;
 
@@ -24,38 +26,39 @@ import model.RoomAvailability;
  */
 public class ExcelWriter {
 
-	//private static final String EXCEL_FILE_LOCATION = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/" + resortName + ".xls";
+	private static final String EXCEL_FILE_PATH = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/";
 
-    public static void main(HotelAvailability availability) throws Exception {
+    public static void main(HotelAvailability hotelAvailability) throws Exception {
     	
-    	String resortName = availability.getName().getStringName();
-    	String EXCEL_FILE_LOCATION = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/" + resortName + ".xls";
+    	String hotelName = hotelAvailability.getName().getDisplayName();
+//    	String EXCEL_FILE_LOCATION = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/" + hotelName + ".xls";
+    	String filePath = EXCEL_FILE_PATH + hotelName + ".xls";
 
-        Map<String, RoomAvailability> roomAvailabilities = availability.getRoomAvailabilities();
+        Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
 
         //1. Create an Excel file
         WritableWorkbook myFirstWbook = null;
         try {
 
-            myFirstWbook = Workbook.createWorkbook(new File(EXCEL_FILE_LOCATION));
+            myFirstWbook = Workbook.createWorkbook(new File(filePath));
 
             // create an Excel sheet
             WritableSheet excelSheet = myFirstWbook.createSheet("Sheet 1", 0);
 
             // add the title into the sheet
-            Label property = new Label(0, 0, availability.getName().toString());
+            Label property = new Label(0, 0, hotelAvailability.getName().toString());
             excelSheet.addCell(property);
-            writeAllDateLabels(excelSheet, availability.getEarliestKnownDate(), availability.getLatestKnownDate());
+            writeAllDateLabels(excelSheet, hotelAvailability.getEarliestKnownDate(), hotelAvailability.getLatestKnownDate());
             //cycle through each room by unit number in the map of all rooms, update each of their availability in excel sheet under corresponding date
 
-            int row = 3;
-            for (Entry<String, RoomAvailability> entry : roomAvailabilities.entrySet()){  //for all unit numbers (rooms) in the map
-                String currentroomnumber = entry.getKey();
-                Label propertynum = new Label(1, row, currentroomnumber);
-                excelSheet.addCell(propertynum);
-                writeAvailabilityForRoom(excelSheet, entry.getValue(), row, availability.getEarliestKnownDate(), availability.getLatestKnownDate());
-                row++;
-            }
+//            int row = 3;
+//            for (Entry<String, RoomAvailability> entry : roomAvailabilities.entrySet()){  //for all unit numbers (rooms) in the map
+//                String currentroomnumber = entry.getKey();
+//                Label propertynum = new Label(1, row, currentroomnumber);
+//                excelSheet.addCell(propertynum);
+//                writeAvailabilityForRoom(excelSheet, entry.getValue(), row, hotelAvailability.getEarliestKnownDate(), hotelAvailability.getLatestKnownDate());
+//                row++;
+//            }
 
             myFirstWbook.write();
 
@@ -127,7 +130,8 @@ public class ExcelWriter {
         }
     }
 
-    private static void writeAvailabilityForMonth(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row, int startingColumn, YearMonth yearMonth, int startingDayOfMonth)throws Exception {
+    private static void writeAvailabilityForMonth(WritableSheet excelSheet, RoomAvailability currentRoomAvailability,
+    		int row, int startingColumn, YearMonth yearMonth, int startingDayOfMonth) throws RowsExceededException, WriteException {
 
         int daysInMonth = yearMonth.lengthOfMonth();
         int startingYear = yearMonth.getYear();
@@ -135,12 +139,19 @@ public class ExcelWriter {
 
             Calendar date = new GregorianCalendar(startingYear, yearMonth.getMonth().getValue()-1, i);  //yearMonth uses 1-12 while Gregorian calendar runs 0-11
 
-            Map<Calendar, Boolean> totalAvailability = currentRoomAvailability.getTotalAvailability();
-            Boolean availBoolean = totalAvailability.get(date);
-            if (availBoolean == null) {
-                System.out.println("hi");
+            Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
+            Optional<Boolean> isAvailable = totalAvailability.get(date);
+            if (isAvailable == null) {
+                throw new RuntimeException("Error when writing to the excel sheet: "
+                		+ "a null value was returned for date " + DateUtils.getReadableDateString(date));
             }
-            Label dateavail = new Label(startingColumn -1 + i, row, availBoolean ? "Y" : "X"); //not sure about the +i anymore
+            String cellContent;
+            if (isAvailable.isPresent()) {
+            	cellContent = isAvailable.get() ? "Y" : "X";
+            } else {
+            	cellContent = " ";
+            }
+            Label dateavail = new Label(startingColumn -1 + i, row, cellContent);
             excelSheet.addCell(dateavail);
 
         }

@@ -26,7 +26,12 @@ public class WalnutBeach {
 	private static final Map<Integer, String> ROOM_CODES = new HashMap<>();
 	static {
 		ROOM_CODES.put(90891, "Chardonnay Studio Suite Mountain View");
+        ROOM_CODES.put(117454, "Chardonnay Studio Lakeview");
 		ROOM_CODES.put(117452, "Sauvignon One Bedroom Mountainview");
+        ROOM_CODES.put(117455, "Pinot One Bedroom with Den Mountainview");
+        ROOM_CODES.put(90892, "Sauvignon One Bedroom Lakeview");
+        ROOM_CODES.put(90894, "Shiraz Two Bedroom Lakeview");
+        ROOM_CODES.put(117453, "Gamay Two Bedroom Lakeview");
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -44,13 +49,13 @@ public class WalnutBeach {
 
 		String url = "https://api.travelclick.com/ibe/v1/hotel/15158/basicavail/multi-room";
 		for (int roomCode : ROOM_CODES.keySet()) {
-			String postBody = "{\"hotelCode\":15158,\"lang\":\"EN_US\",\"ratePlanCode\":\"1685332\",\"ratePlanType\":\"Regular\",\"dateIn\":\"2017-09-07\",\"dateOut\":\"2018-12-05\",\"multiRoomOccupancy\":[{\"adults\":\"1\",\"children\":0}],\"roomTypeCode\":\"" + roomCode + "\",\"preFetch\":true}";
+			String postBody = "{\"hotelCode\":15158,\"lang\":\"EN_US\",\"ratePlanCode\":\"1685332\",\"ratePlanType\":\"Regular\",\"dateIn\":\"2017-09-19\",\"dateOut\":\"2017-12-05\",\"multiRoomOccupancy\":[{\"adults\":\"1\",\"children\":0}],\"roomTypeCode\":\"" + roomCode + "\",\"preFetch\":true}";
 			String page = getPage(url, postBody);
 			RoomAvailability roomAvailability = parser.parseSingleRoomAvailability(page, ROOM_CODES.get(roomCode));
 			roomAvailabilities.put(roomAvailability.getRoomNumber(), roomAvailability);
 		}
 
-		return new HotelAvailability(HotelName.WALNUT_BEACH, roomAvailabilities);
+		return new HotelAvailability(HotelName.WALNUT_BEACH_DEFAULT, roomAvailabilities);
 	}
 
 	public static String getPage(String urlString, String postBody) throws MalformedURLException, IOException {

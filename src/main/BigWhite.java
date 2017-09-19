@@ -18,15 +18,19 @@ import model.HotelAvailability;
 import model.HotelName;
 import model.RoomAvailability;
 import parser.BigWhiteParser;
+import util.DateUtils;
 import util.ExcelWriter;
 
 public class BigWhite {
-	
+
 	private static String[] ROOM_NUMBERS = {"1206", "1408", "1301"};
-	
+
 	public static void main(String[] args) throws Exception {
-		HotelAvailability avail = getAvailability();
-        ExcelWriter.main(avail);
+		HotelAvailability hotelAvailability = getAvailability();
+		hotelAvailability.getAvailabilityForRoomNumber("1206").getAvailableDates().forEach(date -> {
+			System.out.println("Room 1206 available on " + DateUtils.getReadableDateString(date));
+		});
+//        ExcelWriter.main(avail);
     }
 	
 	//each resort will have a unique starting date, not in the excel sheet, but for starting avail checking
@@ -42,9 +46,9 @@ public class BigWhite {
 			RoomAvailability roomAvailability = parser.parseSingleRoomAvailability(page, roomNumber);
 			roomAvailabilities.put(roomNumber, roomAvailability);
 		}
-		return new HotelAvailability(HotelName.BIG_WHITE, roomAvailabilities);
+		return new HotelAvailability(HotelName.BIG_WHITE_STONEBRIDGE, roomAvailabilities);
 	}
-	
+
 	private static String getPage(String urlString) throws MalformedURLException, IOException {
 		HttpURLConnection connection;
 		URL url = new URL(urlString);

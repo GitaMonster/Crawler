@@ -3,6 +3,9 @@ package model;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HotelAvailability {
@@ -10,7 +13,12 @@ public class HotelAvailability {
 	private HotelName name;
 	private Map<String, RoomAvailability> roomAvailabilities;
 	private Map<YearMonth, HotelAvailabilityForMonth> availabilityByMonth;
-	
+
+	public HotelAvailability(HotelName name) {
+		this.name = name;
+		this.roomAvailabilities = new HashMap<String, RoomAvailability>();
+	}
+
 	public HotelAvailability(HotelName name, Map<String, RoomAvailability> roomAvailabilities) {
 		this.name = name;
 		this.roomAvailabilities = roomAvailabilities;
@@ -65,6 +73,20 @@ public Calendar getLatestKnownDate() {
 			}
 		}
 		return latestKnownDate;
+	}
+
+	public RoomAvailability getAvailabilityForRoomNumber(String roomNumber) {
+		return this.roomAvailabilities.get(roomNumber);
+	}
+
+	public List<String> getRoomNumbersAvailableOnDate(Calendar date) {
+		List<String> availableRoomNumbers = new ArrayList<String>();
+		for (RoomAvailability roomAvailability : this.roomAvailabilities.values()) {
+			if (roomAvailability.getTotalAvailability().containsKey(date)) {
+				availableRoomNumbers.add(roomAvailability.getRoomNumber());
+			}
+		}
+		return availableRoomNumbers;
 	}
 
     @Override
