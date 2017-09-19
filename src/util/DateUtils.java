@@ -15,6 +15,16 @@ public class DateUtils {
 		return String.format("%s %s, %s", month, day, year);
 	}
 
+	public static String getMonthDayYearFormat(Calendar date) {
+		int day = date.get(Calendar.DAY_OF_MONTH);
+		int month = date.get(Calendar.MONTH) + 1;
+		int year = date.get(Calendar.YEAR);
+		String dayString = (day < 10) ? ("0" + day) : Integer.toString(day);
+		String monthString = (month < 10) ? ("0" + month) : Integer.toString(month); 
+		String yearString = Integer.toString(year).substring(2, 4);
+		return String.format("%s/%s/%s", monthString, dayString, yearString);
+	}
+
 	public static Set<Calendar> getDateRange(Calendar startDate, Calendar endDate) {
 		Set<Calendar> dateRange = new HashSet<Calendar>();
 		constructDateRange(startDate, endDate, dateRange);

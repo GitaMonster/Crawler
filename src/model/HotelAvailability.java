@@ -50,7 +50,6 @@ public class HotelAvailability {
 	}
 	
 	public Calendar getEarliestKnownDate() {
-		
 		Calendar earliestKnownDate = new GregorianCalendar(3000, 1, 1);
 		
 		for (RoomAvailability ra : roomAvailabilities.values()) {
@@ -62,13 +61,12 @@ public class HotelAvailability {
 		return earliestKnownDate;
 	}
 	
-public Calendar getLatestKnownDate() {
-		
+	public Calendar getLatestKnownDate() {
 		Calendar latestKnownDate = new GregorianCalendar(1900, 1, 1);
-		
+
 		for (RoomAvailability ra : roomAvailabilities.values()) {
 			Calendar latestDateForRoom = ra.getLatestKnownDate();
-			if (latestDateForRoom.before(latestKnownDate)) {
+			if (latestDateForRoom.after(latestKnownDate)) {
 				latestKnownDate = latestDateForRoom;
 			}
 		}

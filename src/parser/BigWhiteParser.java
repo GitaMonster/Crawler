@@ -24,13 +24,13 @@ public class BigWhiteParser implements HotelParser {
 
 		Map<Calendar, Optional<Boolean>> availability = new HashMap<Calendar, Optional<Boolean>>();
 
-		addDates(pageText, availability, VACANT_IDENTIFIER, true);
-		addDates(pageText, availability, OCCUPIED_IDENTIFIER, false);
-		addDates(pageText, availability, BLOCKED_IDENTIFIER, null);
+		addDates(pageText, availability, VACANT_IDENTIFIER, Optional.of(true));
+		addDates(pageText, availability, OCCUPIED_IDENTIFIER, Optional.of(false));
+		addDates(pageText, availability, BLOCKED_IDENTIFIER, Optional.empty());
 		return new RoomAvailability(roomNumber, availability);
 	}
 	
-	private void addDates(String pageText, Map<Calendar, Optional<Boolean>> availability, String identifier, Boolean markAsAvailable) {
+	private void addDates(String pageText, Map<Calendar, Optional<Boolean>> availability, String identifier, Optional<Boolean> markAsAvailable) {
 		int currentIndex = pageText.indexOf(identifier);
 		while (currentIndex != -1) {
 			String dateData = pageText.substring(currentIndex - 12, currentIndex - 2);
@@ -52,7 +52,7 @@ public class BigWhiteParser implements HotelParser {
 			currentIndex = pageText.indexOf(identifier, currentIndex + 1);
 
 			Calendar specificDate = new GregorianCalendar(year, month, day);
-			availability.put(specificDate, markAsAvailable == null ? null : Optional.of(markAsAvailable));
+			availability.put(specificDate, markAsAvailable);
 		}
 	}
 }

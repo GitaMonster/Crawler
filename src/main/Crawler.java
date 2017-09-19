@@ -28,7 +28,7 @@ public class Crawler {
 	public static final String CRAWLING_PATH = "/Users/adrian.bocker/Desktop/Crawling/";
 
 	public static void main(String[] args) throws Exception {
-		HotelAvailability bigWhiteAvailability = BigWhite.getAvailability();
+//		HotelAvailability bigWhiteAvailability = BigWhite.getAvailability();
 	}
 
 	public static void getAvailabilityForWalnutBeach() throws MalformedURLException, IOException {

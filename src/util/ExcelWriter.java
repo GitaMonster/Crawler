@@ -1,12 +1,15 @@
 package util;
 
+import jxl.format.Alignment;
+import jxl.format.CellFormat;
 import jxl.Workbook;   //workbook is an abstract class with no static
 import jxl.write.Label;
+import jxl.write.WritableCell;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableWorkbook;
 import jxl.write.WritableSheet;
+
 import java.io.File;
-import java.io.IOException;
-import java.time.Month;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -31,75 +34,54 @@ public class ExcelWriter {
     public static void main(HotelAvailability hotelAvailability) throws Exception {
     	
     	String hotelName = hotelAvailability.getName().getDisplayName();
-//    	String EXCEL_FILE_LOCATION = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/" + hotelName + ".xls";
     	String filePath = EXCEL_FILE_PATH + hotelName + ".xls";
 
         Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
+        Calendar earliestDate = hotelAvailability.getEarliestKnownDate();
+        Calendar latestDate = hotelAvailability.getLatestKnownDate();
 
         //1. Create an Excel file
         WritableWorkbook myFirstWbook = null;
         try {
-
             myFirstWbook = Workbook.createWorkbook(new File(filePath));
 
             // create an Excel sheet
             WritableSheet excelSheet = myFirstWbook.createSheet("Sheet 1", 0);
 
             // add the title into the sheet
-            Label property = new Label(0, 0, hotelAvailability.getName().toString());
+            Label property = new Label(0, 0, hotelAvailability.getName().getDisplayName());
             excelSheet.addCell(property);
-            writeAllDateLabels(excelSheet, hotelAvailability.getEarliestKnownDate(), hotelAvailability.getLatestKnownDate());
+            writeAllDateLabels(excelSheet, earliestDate, latestDate);
             //cycle through each room by unit number in the map of all rooms, update each of their availability in excel sheet under corresponding date
 
-//            int row = 3;
-//            for (Entry<String, RoomAvailability> entry : roomAvailabilities.entrySet()){  //for all unit numbers (rooms) in the map
-//                String currentroomnumber = entry.getKey();
-//                Label propertynum = new Label(1, row, currentroomnumber);
-//                excelSheet.addCell(propertynum);
-//                writeAvailabilityForRoom(excelSheet, entry.getValue(), row, hotelAvailability.getEarliestKnownDate(), hotelAvailability.getLatestKnownDate());
-//                row++;
-//            }
+            writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
 
             myFirstWbook.write();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WriteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-
-            if (myFirstWbook != null) {
-                try {
-                    myFirstWbook.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (WriteException e) {
-                    e.printStackTrace();
-                }
-            }
-
+        	myFirstWbook.close();
         }
     }
 
     //add the month names and dates into the top of the sheet
-    private static void writeAllDateLabels(WritableSheet excelSheet, Calendar startDate, Calendar endDate)throws Exception{
+    private static void writeAllDateLabels(WritableSheet excelSheet, Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {
     	//Calendar now = Calendar.getInstance();  //also set time zone to GMT?    keep for Cirrus     
-    	//int startingDateInStartingMonth = now.get(Calendar.DATE);                             
-    	//YearMonth startingYearMonth = YearMonth.now();                         
+    	YearMonth startingYearMonth = YearMonth.of(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH) + 1);
+        YearMonth finalYearMonth = YearMonth.of(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH) + 1);
     	int startingDayOfMonth = startDate.get(Calendar.DAY_OF_MONTH);
-    	YearMonth startingYearMonth = YearMonth.of(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH)+1);
-        YearMonth finalYearMonth = YearMonth.of(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH)+1);
-    	
+
     	int monthStartingColumn = 3; //arbitrary; very first column is 3
-    	for(YearMonth ym = startingYearMonth; !ym.equals(finalYearMonth.plusMonths(1)); ym = ym.plusMonths(1)) {
+    	for (YearMonth ym = startingYearMonth; !ym.isAfter(finalYearMonth); ym = ym.plusMonths(1)) {
     		writeDateLabelsForMonth(excelSheet, ym, monthStartingColumn, startingDayOfMonth);
     		startingDayOfMonth = 1;
-    		monthStartingColumn = monthStartingColumn + (ym.lengthOfMonth()-startingDayOfMonth);
+    		monthStartingColumn = monthStartingColumn + (ym.lengthOfMonth() - startingDayOfMonth + 1);
     	}
     }
 
     //add the dates into the top of the sheet for a given month
-    private static void writeDateLabelsForMonth(WritableSheet excelSheet, YearMonth yearMonth, int startingColumn, int startingDayOfMonth) throws Exception{
+    private static void writeDateLabelsForMonth(WritableSheet excelSheet, YearMonth yearMonth, int startingColumn,
+    		int startingDayOfMonth) throws RowsExceededException, WriteException {
 
         Label month = new Label(startingColumn, 0 , yearMonth.getMonth().toString() + " " + yearMonth.getYear());
         excelSheet.addCell(month);
@@ -108,52 +90,67 @@ public class ExcelWriter {
 
         int columnCounter = 1;
         for(int i=startingDayOfMonth; i <= yearMonth.lengthOfMonth(); i++) {
-            Number dateInMonth = new Number(startingColumn -1 + columnCounter, 1, i);
+        	Number dateInMonth = createCenteredCellNumber(startingColumn -1 + columnCounter, 1, i);
             excelSheet.addCell(dateInMonth);
             columnCounter++;
         }
     }
 
-    //COMBINE THE NEXT 2 METHODS INTO 1
-    private static void writeAvailabilityForRoom(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row, Calendar startDate, Calendar endDate) throws Exception{
-
-    	//ALL ADDED:
-    	int firstDayOfEachMonth = startDate.get(Calendar.DATE);   //starting day
-        YearMonth startingYearMonth = YearMonth.of(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH));
-        YearMonth finalYearMonth = YearMonth.of(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH));
-        int startingColumn = 3;
-       
-        for(YearMonth currentYearMonth = startingYearMonth; !currentYearMonth.equals(finalYearMonth.plusMonths(1)); currentYearMonth = currentYearMonth.plusMonths(1)) {
-            writeAvailabilityForMonth(excelSheet, currentRoomAvailability, row, startingColumn, currentYearMonth, firstDayOfEachMonth);
-            startingColumn = startingColumn + currentYearMonth.lengthOfMonth();
-            firstDayOfEachMonth = 1;
+    private static void writeAvailabilityForAllRooms(WritableSheet excelSheet, Map<String, RoomAvailability> roomAvailabilities,
+    		Calendar earliestDate, Calendar latestDate) throws RowsExceededException, WriteException {
+        int row = 3;
+        for (Entry<String, RoomAvailability> entry : roomAvailabilities.entrySet()){  //for all unit numbers (rooms) in the map
+            String currentroomnumber = entry.getKey();
+            Label propertynum = new Label(1, row, currentroomnumber);
+            excelSheet.addCell(propertynum);
+            writeAvailabilityForRoom(excelSheet, entry.getValue(), row, earliestDate, latestDate);
+            row++;
         }
     }
 
-    private static void writeAvailabilityForMonth(WritableSheet excelSheet, RoomAvailability currentRoomAvailability,
-    		int row, int startingColumn, YearMonth yearMonth, int startingDayOfMonth) throws RowsExceededException, WriteException {
-
-        int daysInMonth = yearMonth.lengthOfMonth();
-        int startingYear = yearMonth.getYear();
-        for(int i=startingDayOfMonth ; i<=daysInMonth ; i++) {
-
-            Calendar date = new GregorianCalendar(startingYear, yearMonth.getMonth().getValue()-1, i);  //yearMonth uses 1-12 while Gregorian calendar runs 0-11
-
-            Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
+    private static void writeAvailabilityForRoom(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row,
+    		Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {
+        int currentColumn = startDate.get(Calendar.DAY_OF_MONTH) + 2;
+        
+        for (Calendar date : DateUtils.getOrderedDateRange(startDate, endDate)) {
+        	Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
             Optional<Boolean> isAvailable = totalAvailability.get(date);
             if (isAvailable == null) {
                 throw new RuntimeException("Error when writing to the excel sheet: "
                 		+ "a null value was returned for date " + DateUtils.getReadableDateString(date));
             }
-            String cellContent;
-            if (isAvailable.isPresent()) {
-            	cellContent = isAvailable.get() ? "Y" : "X";
-            } else {
-            	cellContent = " ";
-            }
-            Label dateavail = new Label(startingColumn -1 + i, row, cellContent);
-            excelSheet.addCell(dateavail);
+            Label availabilityContent = createCenteredCellLabel(currentColumn, row, createCellContent(isAvailable));
 
+            excelSheet.addCell(availabilityContent);
+            currentColumn++;
+        }
+    }
+
+    private static Label createCenteredCellLabel(int column, int row, String content) throws WriteException {
+    	Label availabilityContent = new Label(column, row, content);
+    	centerCell(availabilityContent);
+		return availabilityContent;
+    }
+
+    private static Number createCenteredCellNumber(int column, int row, int content) throws WriteException {
+    	Number number = new Number(column, row, content);
+    	centerCell(number);
+		return number;
+    }
+
+    private static void centerCell(WritableCell cell) throws WriteException {
+    	CellFormat readFormat = cell.getCellFormat();
+		WritableCellFormat newFormat = new WritableCellFormat(readFormat);
+		newFormat.setAlignment(Alignment.CENTRE);
+		cell.setCellFormat(newFormat);
+    }
+
+    // TODO: Figure out why empty optionals aren't being found
+    private static String createCellContent(Optional<Boolean> isAvailable) {
+        if (isAvailable.isPresent()) {
+        	return isAvailable.get() ? "Y" : "X";
+        } else {
+        	return " ";
         }
     }
 }
