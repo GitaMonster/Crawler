@@ -1,4 +1,6 @@
 {
+  "resortCode" : "01",
+  "roomNumberCode" : "PT",
   "rooms": {
     "1 Bdrm Regular" : [
       "107",

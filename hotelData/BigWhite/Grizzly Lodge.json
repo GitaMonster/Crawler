@@ -1,4 +1,6 @@
 {
+  "resortCode" : "01",
+  "roomNumberCode" : "GL",
   "rooms": {
     "1 Bdrm Plus Den Premium" : [
       "105",

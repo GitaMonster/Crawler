@@ -1,4 +1,6 @@
 {
+  "resortCode" : "01",
+  "roomNumberCode" : "EG",
   "rooms": {
     "3/4 Bdrm Regular" : [
       "305",

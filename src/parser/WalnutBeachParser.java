@@ -20,7 +20,7 @@ public class WalnutBeachParser implements HotelParser {
 	public HotelAvailability parse(String page) {
 		return null;
 	}
-	
+
 	@Override
 	public RoomAvailability parseSingleRoomAvailability(String page, String roomNumber) throws IOException {
 		Map<Calendar, Optional<Boolean>> totalRoomAvailability = new HashMap<Calendar, Optional<Boolean>>();

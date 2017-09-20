@@ -113,13 +113,14 @@ public class ExcelWriter {
     private static void writeAvailabilityForRoom(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row,
     		Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {
     	int currentColumn = DATE_STARTING_COLUMN;
-        
+
         for (Calendar date : DateUtils.getOrderedDateRange(startDate, endDate)) {
         	Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
             Optional<Boolean> isAvailable = totalAvailability.get(date);
             if (isAvailable == null) {
                 throw new RuntimeException("Error when writing to the excel sheet: "
-                		+ "a null value was returned for date " + DateUtils.getReadableDateString(date));
+                		+ "a null value was returned for date " + DateUtils.getReadableDateString(date) + 
+                		" for room " + currentRoomAvailability.getRoomNumber());
             }
             Label availabilityContent = createCenteredCellLabel(currentColumn, row, createCellContent(isAvailable));
 

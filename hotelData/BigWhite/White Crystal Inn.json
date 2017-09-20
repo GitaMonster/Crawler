@@ -1,4 +1,6 @@
 {
+  "resortCode" : "02",
+  "roomNumberCode" : "WC",
   "rooms": {
     "1 Bdrm Plus Den Hotel WCI" : [
       "206",
@@ -54,8 +56,8 @@
       "320",
       "SUPR-K",
       "SUPRKH",
-      "SUPERKQ",
-      "SUPERMH"
+      "SUPRKQ",
+      "SUPRMH"
     ]
   }
 }

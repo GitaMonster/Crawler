@@ -40,9 +40,10 @@ public class BigWhite {
 	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 22);
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
 
-	private static String ROOM_NUMBERS_KEY = "rooms";
-	private static String PROPERTY_CODE_KEY = "propertyCode";
-	private static String ROOM_NUMBER_CODE_KEY = "roomNumberCode";
+	private static final String ROOM_NUMBERS_KEY = "rooms";
+	private static final String PROPERTY_CODE_KEY = "propertyCode";
+	private static final String ROOM_NUMBER_CODE_KEY = "roomNumberCode";
+	private static final String RESORT_CODE_KEY = "resortCode";
 
 	public static void main(String[] args) throws Exception {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
@@ -51,19 +52,55 @@ public class BigWhite {
 		ResortAvailability bigWhiteAvailability = getResortAvailability(startDate, endDate);
 
 		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE));
+        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES));
+        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING));
+		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT));
     }
 
 	public static ResortAvailability getResortAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
 		HotelAvailability bearsPawAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate);
+		HotelAvailability blackBearAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate);
+		HotelAvailability bulletCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate);
+		HotelAvailability chateauRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate);
+		HotelAvailability copperKettleAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate);
+		HotelAvailability eaglesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate);
+		HotelAvailability grizzlyAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate);
+		HotelAvailability plazaRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate);
+		HotelAvailability ptarmiganAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate);
+		HotelAvailability snowyCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate);
 		HotelAvailability stonebridgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate);
 		HotelAvailability stonegateAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate);
+		HotelAvailability toweringPinesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate);
+		HotelAvailability trappersCrossingAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate);
+		HotelAvailability whitefootAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate);
 
 		Map<HotelName, HotelAvailability> hotelAvailabilities = new HashMap<HotelName, HotelAvailability>();
 		hotelAvailabilities.put(HotelName.BIG_WHITE_BEARS_PAW, bearsPawAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_BLACK_BEAR, blackBearAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_BULLET_CREEK, bulletCreekAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_CHATEAU_RIDGE, chateauRidgeAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_COPPER_KETTLE, copperKettleAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_EAGLES, eaglesAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_GRIZZLY, grizzlyAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_PLAZA_RIDGE, plazaRidgeAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_PTARMINGAN, ptarmiganAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_SNOWY_CREEK, snowyCreekAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEBRIDGE, stonebridgeAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEGATE, stonegateAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_TOWERING_PINES, toweringPinesAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_TRAPPERS_CROSSING, trappersCrossingAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_WHITEFOOT, whitefootAvailability);
 
 		return new ResortAvailability(ResortName.BIG_WHITE, hotelAvailabilities);
 	}
@@ -76,12 +113,13 @@ public class BigWhite {
 		List<String> fullRoomNumbers = (List<String>) roomsData.get(ROOM_NUMBERS_KEY);
 		Optional<Object> propertyCode = roomsData.get(PROPERTY_CODE_KEY) == null ? Optional.empty() : Optional.of(roomsData.get(PROPERTY_CODE_KEY));
 		String roomNumberCode = (String) roomsData.get(ROOM_NUMBER_CODE_KEY);
+		String resortCode = (String) roomsData.get(RESORT_CODE_KEY);
 
 		HotelAvailability hotelAvailability = new HotelAvailability(hotelName);
 		List<Calendar> requestDates = calculateRequestDates(startDate, endDate);
 
 		for (Calendar requestDate : requestDates) {
-			addAvailabilityAroundDate(hotelAvailability, fullRoomNumbers, requestDate, propertyCode, roomNumberCode);
+			addAvailabilityAroundDate(hotelAvailability, fullRoomNumbers, resortCode, requestDate, propertyCode, roomNumberCode);
 		}
 		hotelAvailability.trimDateRange(startDate, endDate);
 
@@ -92,7 +130,7 @@ public class BigWhite {
 
 	//each resort will have a unique starting date, not in the excel sheet, but for starting avail checking
 
-	public static void addAvailabilityAroundDate(HotelAvailability hotelAvailability, List<String> fullRoomNumbers,
+	public static void addAvailabilityAroundDate(HotelAvailability hotelAvailability, List<String> fullRoomNumbers, String resortCode,
 			Calendar requestDate, Optional<Object> propertyCode, String roomNumberCode) throws MalformedURLException, IOException {
 		BigWhiteParser parser = new BigWhiteParser();
 		Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
@@ -104,11 +142,11 @@ public class BigWhite {
 			String roomNumber = fullRoomNumber.split("-")[1].trim();
 			String url;
 			if (propertyCode.isPresent()) {
-				url = String.format("http://irmestore.bigwhite.com/irmnet/res/RoomDetailsPage.aspx?Resort=01&PropertyCode=%s&RoomNum=%s%s&Arrival=%s",
-						propertyCode.get().toString(), roomNumberCode, roomNumber, requestDateString);
+				url = String.format("http://irmestore.bigwhite.com/irmnet/res/RoomDetailsPage.aspx?Resort=%s&PropertyCode=%s&RoomNum=%s%s&Arrival=%s",
+						resortCode, propertyCode.get().toString(), roomNumberCode, roomNumber, requestDateString);
 			} else {
-				url = String.format("http://irmestore.bigwhite.com/irmnet/res/RoomDetailsPage.aspx?Resort=01&RoomNum=%s%s&Arrival=%s",
-						roomNumberCode, roomNumber, requestDateString);
+				url = String.format("http://irmestore.bigwhite.com/irmnet/res/RoomDetailsPage.aspx?Resort=%s&RoomNum=%s%s&Arrival=%s",
+						resortCode, roomNumberCode, roomNumber, requestDateString);
 			}
 			String page = getPage(url);
 			RoomAvailability roomAvailability = parser.parseSingleRoomAvailability(page, roomNumber);
@@ -189,8 +227,10 @@ public class BigWhite {
 			roomsData.put(PROPERTY_CODE_KEY, Optional.empty());
 		}
 		String roomNumberCode = root.get(ROOM_NUMBER_CODE_KEY).asText();
+		String resortCode = root.get(RESORT_CODE_KEY).asText();
 
 		roomsData.put(ROOM_NUMBER_CODE_KEY, roomNumberCode);
+		roomsData.put(RESORT_CODE_KEY, resortCode);
 
 		ObjectNode roomNumberData = (ObjectNode) root.get(ROOM_NUMBERS_KEY);
 
