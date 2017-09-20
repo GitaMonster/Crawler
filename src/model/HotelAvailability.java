@@ -87,6 +87,13 @@ public class HotelAvailability {
 		return availableRoomNumbers;
 	}
 
+	// Note: once this is called, dates outside the given range will be permanently removed from this object
+	public void trimDateRange(Calendar earliestAllowedDate, Calendar latestAllowedDate) {
+		this.roomAvailabilities.values().forEach(roomAvailability -> {
+			roomAvailability.trimDateRange(earliestAllowedDate, latestAllowedDate);
+		});
+	}
+
     @Override
     public int hashCode() {
         final int prime = 31;

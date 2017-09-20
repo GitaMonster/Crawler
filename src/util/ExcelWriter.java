@@ -30,6 +30,7 @@ import model.RoomAvailability;
 public class ExcelWriter {
 
 	private static final String EXCEL_FILE_PATH = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/";
+	private static final int DATE_STARTING_COLUMN = 3;  //arbitrary; very first column is 3
 
     public static void main(HotelAvailability hotelAvailability) throws Exception {
     	
@@ -71,25 +72,26 @@ public class ExcelWriter {
         YearMonth finalYearMonth = YearMonth.of(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH) + 1);
     	int startingDayOfMonth = startDate.get(Calendar.DAY_OF_MONTH);
 
-    	int monthStartingColumn = 3; //arbitrary; very first column is 3
+    	int monthStartingColumn = DATE_STARTING_COLUMN;
     	for (YearMonth ym = startingYearMonth; !ym.isAfter(finalYearMonth); ym = ym.plusMonths(1)) {
-    		writeDateLabelsForMonth(excelSheet, ym, monthStartingColumn, startingDayOfMonth);
-    		startingDayOfMonth = 1;
+    		int endingDayOfMonth = ym.equals(DateUtils.getYearMonthFromDate(endDate)) ? endDate.get(Calendar.DAY_OF_MONTH) : ym.lengthOfMonth();
+    		writeDateLabelsForMonth(excelSheet, ym, monthStartingColumn, startingDayOfMonth, endingDayOfMonth);
     		monthStartingColumn = monthStartingColumn + (ym.lengthOfMonth() - startingDayOfMonth + 1);
+    		startingDayOfMonth = 1;
     	}
     }
 
     //add the dates into the top of the sheet for a given month
     private static void writeDateLabelsForMonth(WritableSheet excelSheet, YearMonth yearMonth, int startingColumn,
-    		int startingDayOfMonth) throws RowsExceededException, WriteException {
+    		int startingDayOfMonth, int endingDayOfMonth) throws RowsExceededException, WriteException {
 
         Label month = new Label(startingColumn, 0 , yearMonth.getMonth().toString() + " " + yearMonth.getYear());
         excelSheet.addCell(month);
-        int remainingDaysInMonth = yearMonth.lengthOfMonth() - startingDayOfMonth;
+        int remainingDaysInMonth = endingDayOfMonth - startingDayOfMonth;
         excelSheet.mergeCells(startingColumn, 0, startingColumn + remainingDaysInMonth - 1, 0);
 
         int columnCounter = 1;
-        for(int i=startingDayOfMonth; i <= yearMonth.lengthOfMonth(); i++) {
+        for(int i=startingDayOfMonth; i <= endingDayOfMonth; i++) {
         	Number dateInMonth = createCenteredCellNumber(startingColumn -1 + columnCounter, 1, i);
             excelSheet.addCell(dateInMonth);
             columnCounter++;
@@ -98,7 +100,7 @@ public class ExcelWriter {
 
     private static void writeAvailabilityForAllRooms(WritableSheet excelSheet, Map<String, RoomAvailability> roomAvailabilities,
     		Calendar earliestDate, Calendar latestDate) throws RowsExceededException, WriteException {
-        int row = 3;
+        int row = DATE_STARTING_COLUMN;
         for (Entry<String, RoomAvailability> entry : roomAvailabilities.entrySet()){  //for all unit numbers (rooms) in the map
             String currentroomnumber = entry.getKey();
             Label propertynum = new Label(1, row, currentroomnumber);
@@ -110,7 +112,7 @@ public class ExcelWriter {
 
     private static void writeAvailabilityForRoom(WritableSheet excelSheet, RoomAvailability currentRoomAvailability, int row,
     		Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {
-        int currentColumn = startDate.get(Calendar.DAY_OF_MONTH) + 2;
+    	int currentColumn = DATE_STARTING_COLUMN;
         
         for (Calendar date : DateUtils.getOrderedDateRange(startDate, endDate)) {
         	Map<Calendar, Optional<Boolean>> totalAvailability = currentRoomAvailability.getTotalAvailability();
@@ -145,7 +147,6 @@ public class ExcelWriter {
 		cell.setCellFormat(newFormat);
     }
 
-    // TODO: Figure out why empty optionals aren't being found
     private static String createCellContent(Optional<Boolean> isAvailable) {
         if (isAvailable.isPresent()) {
         	return isAvailable.get() ? "Y" : "X";
