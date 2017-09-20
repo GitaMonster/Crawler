@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+
+import util.DateUtils;
 
 public class RoomAvailability {
 
@@ -42,6 +45,28 @@ public class RoomAvailability {
 
 	public void setAvailabilityForDate(Calendar date, Optional<Boolean> isAvailable) {
 		this.totalAvailability.put(date, isAvailable);
+	}
+
+	public void mergeWith(RoomAvailability otherAvailability) {
+		if (!otherAvailability.getRoomNumber().equals(this.roomNumber)) {
+			throw new RuntimeException("Error: Cannot merge availabilities for different rooms into one object");
+		}
+		for (Entry<Calendar, Optional<Boolean>> otherEntry : otherAvailability.getTotalAvailability().entrySet()) {
+			Calendar otherKey = otherEntry.getKey();
+			Optional<Boolean> otherValue = otherEntry.getValue();
+			if (this.totalAvailability.containsKey(otherKey)) {
+				Optional<Boolean> existingValue = this.totalAvailability.get(otherKey);
+				if (otherValue == null ^ existingValue == null) {
+					throw new RuntimeException("Error when merging room availabilities for date " + 
+							DateUtils.getReadableDateString(otherKey) + "; One value was set and the other was null");
+				} else if (otherValue != null && existingValue != null && !otherValue.equals(existingValue)) {
+					throw new RuntimeException("Error when merging room availabilities for date " + 
+							DateUtils.getReadableDateString(otherKey) + "; One value was " + otherValue.toString() + " and the other was " + existingValue.toString());
+				}
+			} else {
+				this.totalAvailability.put(otherKey, otherEntry.getValue());
+			}
+		}
 	}
 
 	public List<Calendar> getAvailableDates() {
@@ -82,6 +107,17 @@ public class RoomAvailability {
 			}
 		}
 		return availability;
+	}
+
+	// Note: once this is called, dates outside the given range will be permanently removed from this object
+	public void trimDateRange(Calendar earliestAllowedDate, Calendar latestAllowedDate) {
+		Iterator<Calendar> iterator = this.totalAvailability.keySet().iterator();
+		while (iterator.hasNext()) {
+			Calendar key = iterator.next();
+			if (key.before(earliestAllowedDate) || key.after(latestAllowedDate)) {
+				iterator.remove();
+			}
+		}
 	}
 
     @Override

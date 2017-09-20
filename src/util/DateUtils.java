@@ -15,6 +15,14 @@ public class DateUtils {
 		return String.format("%s %s, %s", month, day, year);
 	}
 
+	public static Calendar today() {
+		return Calendar.getInstance();
+	}
+
+	public static YearMonth getYearMonthFromDate(Calendar date) {
+		return YearMonth.of(date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1);
+	}
+
 	public static String getMonthDayYearFormat(Calendar date) {
 		int day = date.get(Calendar.DAY_OF_MONTH);
 		int month = date.get(Calendar.MONTH) + 1;
