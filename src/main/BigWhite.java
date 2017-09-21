@@ -63,6 +63,7 @@ public class BigWhite {
 		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE));
+        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES));
         ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING));
 		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT));
@@ -81,6 +82,7 @@ public class BigWhite {
 		HotelAvailability snowyCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate);
 		HotelAvailability stonebridgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate);
 		HotelAvailability stonegateAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate);
+		HotelAvailability sundanceAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate);
 		HotelAvailability toweringPinesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate);
 		HotelAvailability trappersCrossingAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate);
 		HotelAvailability whitefootAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate);
@@ -98,6 +100,7 @@ public class BigWhite {
 		hotelAvailabilities.put(HotelName.BIG_WHITE_SNOWY_CREEK, snowyCreekAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEBRIDGE, stonebridgeAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEGATE, stonegateAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_SUNDANCE, sundanceAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_TOWERING_PINES, toweringPinesAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_TRAPPERS_CROSSING, trappersCrossingAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_WHITEFOOT, whitefootAvailability);

@@ -16,6 +16,7 @@ public enum HotelName {
 	BIG_WHITE_PLAZA_RIDGE(ResortName.BIG_WHITE, "Plaza on the Ridge"),
 	BIG_WHITE_PTARMINGAN(ResortName.BIG_WHITE, "Ptarmigan Inn"),
 	BIG_WHITE_SNOWY_CREEK(ResortName.BIG_WHITE, "Snowy Creek"),
+	BIG_WHITE_SUNDANCE(ResortName.BIG_WHITE, "Sundance Resort"),
 	BIG_WHITE_TOWERING_PINES(ResortName.BIG_WHITE, "Towering Pines"),
 	BIG_WHITE_TRAPPERS_CROSSING(ResortName.BIG_WHITE, "Trappers Crossing"),
 	BIG_WHITE_WHITEFOOT(ResortName.BIG_WHITE, "Whitefoot Lodge"),
