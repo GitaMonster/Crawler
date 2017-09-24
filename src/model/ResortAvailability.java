@@ -1,6 +1,8 @@
 package model;
 
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +39,30 @@ public class ResortAvailability {
 
 	public HotelAvailability getAvailabilityForHotel(HotelName hotelName) {
 		return this.hotelAvailabilities.get(hotelName);
+	}
+
+	public Calendar getEarliestKnownDate() {
+		Calendar earliestKnownDate = new GregorianCalendar(3000, 1, 1);
+		
+		for (HotelAvailability hotelAvailability : hotelAvailabilities.values()) {
+			Calendar earliestDateForHotel = hotelAvailability.getEarliestKnownDate();
+			if (earliestDateForHotel.before(earliestKnownDate)) {
+				earliestKnownDate = earliestDateForHotel;
+			}
+		}
+		return earliestKnownDate;
+	}
+	
+	public Calendar getLatestKnownDate() {
+		Calendar latestKnownDate = new GregorianCalendar(1900, 1, 1);
+
+		for (HotelAvailability hotelAvailability : hotelAvailabilities.values()) {
+			Calendar latestDateForHotel = hotelAvailability.getLatestKnownDate();
+			if (latestDateForHotel.after(latestKnownDate)) {
+				latestKnownDate = latestDateForHotel;
+			}
+		}
+		return latestKnownDate;
 	}
 
     @Override

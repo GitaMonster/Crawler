@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ import util.Symbols;
 public class Crawler {
 
 	private static final String LEAVE_TOWN_POST_DATA_PATH = System.getProperty("user.dir") + "/resources/leavetownPostData/";
+	private static final String AVAILABILITY_TEMPLATE_CODE = "____AVAILABILITY____";
+	private static final String START_DATE_TEMPLATE_CODE = "____START_DATE____";
+	private static final String END_DATE_TEMPLATE_CODE = "____END_DATE____";
 
 	public static void main(String[] args) throws Exception {
 		String postBodyTemplate = new String(Files.readAllBytes(Paths.get(LEAVE_TOWN_POST_DATA_PATH + "cirrusRequestBodyTemplate.txt")));
@@ -35,25 +39,46 @@ public class Crawler {
 		postResortAvailabilityToLeaveTown(resortAvailability, postBodyTemplate);
 	}
 
+	// This assumes dates have already been trimmed to desired length
 	private static void postResortAvailabilityToLeaveTown(ResortAvailability resortAvailability,
-			String cirrusRequestBodyTemplate) throws IOException {
+			String cirrusRequestBodyTemplate) throws MalformedURLException, IOException {
 
-		Map<String, String> propertyIdMap = getPropertyIdMap();
-		propertyIdMap.forEach((roomDescription, fullPropertyId) -> {
+		Calendar startDate = resortAvailability.getEarliestKnownDate();
+		Calendar endDate = resortAvailability.getLatestKnownDate();
+
+		Map<String, String> propertyIdMap = getTestPropertyIdMap();
+		for (Entry<String, String> entry : propertyIdMap.entrySet()) {
+			String roomDescription = entry.getKey();
+			String propertyId = entry.getValue();
+
 			Set<RoomAvailability> roomAvailabilities = BigWhite.getRoomAvailabilitiesForProperty(resortAvailability, roomDescription);
-			Map<Calendar, Optional<Boolean>> propertyAvailability = BigWhite.convertToPropertyAvailability(roomAvailabilities);
-			postPropertyAvailability(propertyAvailability, propertyIdMap.get(roomDescription), cirrusRequestBodyTemplate);
-		});
+			if (!roomAvailabilities.isEmpty()) {
+				System.out.println("\nPosting availability for " + roomDescription + "; property id = " + propertyId);
+				Map<Calendar, Optional<Boolean>> propertyAvailability = BigWhite.convertToPropertyAvailability(roomAvailabilities,
+						startDate, endDate);
+				postPropertyAvailability(propertyAvailability, propertyId, cirrusRequestBodyTemplate,
+						startDate, endDate);
+			}
+		}
 	}
 
-	private static void postPropertyAvailability(Map<Calendar, Optional<Boolean>> propertyAvailability,
-			String propertyId, String cirrusRequestBodyTemplate) {
+	private static void postPropertyAvailability(Map<Calendar, Optional<Boolean>> propertyAvailability, String propertyId,
+			String cirrusRequestBodyTemplate, Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
 		
+		String availabilityBlock = convertToCSV(propertyAvailability, startDate, endDate);
+		String availabilityRendered = cirrusRequestBodyTemplate.replaceAll(AVAILABILITY_TEMPLATE_CODE, availabilityBlock);
+
+		String startDateString = DateUtils.getMonthDayYearFormat(startDate);
+		String endDateString = DateUtils.getMonthDayYearFormat(endDate);
+		String startDateRendered = availabilityRendered.replaceAll(START_DATE_TEMPLATE_CODE, startDateString);
+		String endDateRendered = startDateRendered.replaceAll(END_DATE_TEMPLATE_CODE, endDateString);
+
+		postToLeavetown(propertyId, endDateRendered);
 	}
 
 	private static void postToLeavetown(String propertyId, String postBody) throws MalformedURLException, IOException {
 		StringBuffer resultText;
-		String urlString = "https://cirrus.leavetown.com/property-detail.aspx?propertyid=374";
+		String urlString = "https://cirrus.leavetown.com/property-detail.aspx?propertyid=" + propertyId;
 		URL url = new URL(urlString);
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
@@ -62,13 +87,11 @@ public class Crawler {
 	
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-//		connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundary8AtExlAiL3twjKYH");
-//		connection.setRequestProperty("Cookie", "ASP.NET_SessionId=r0ir2ben2yekvh1fezkownd4; Login.Username=chloe@leavetown.com; .ASPXAUTH=ABE34FCA26F79D3CBE8E47C703D5138A7A17093D910979A177015B29FBCABE278C290DF60D772FF856A9F88C0F97823C17D297D7E12E69834381648BBF7E5EA6A785B55FF289D8949B7736797DEC09FB34D574267D66B2294B5FF9306A6380000E8D129923518998DB61FC7C8BC693C66378E43C20FF6181111D2B779BD25970; _ga=GA1.3.72223939.1506225904; _gid=GA1.3.1738991228.1506225904; _gali=ContentPlaceHolder1_btnSubmitAvailabilityPricingFake");
 		connection.setRequestProperty("Content-type", "multipart/form-data; boundary=----WebKitFormBoundaryP344hY411nA3LwwK");
 		connection.setRequestProperty("Cookie", "ASP.NET_SessionId=jvw0udyjeijhb1br2y5uo1lf; Login.Username=chloe@leavetown.com; .ASPXAUTH=36636BD1FD6C986F17041DBA11D2853C032BF1441C99826EF398126C18FFC451B6A599378A81A7933B0931FA324504AD1DA81EA0E3AB241351C3355CCB7973F0EAB4D47F14A0A78048D6A3A644FFEBB9DA1087C6D7C3A6BFFCB4334BCBFB943C86686C3248DC696C87AA82601D8258013796D133FDB347441146D2742824B213; _ga=GA1.3.679933037.1506233851; _gid=GA1.3.51340828.1506233851; _gali=ContentPlaceHolder1_btnAvailabilityPricing");
 		connection.setRequestProperty("Origin", "https://cirrus.leavetown.com");
-		connection.setRequestProperty("Referer", "https://cirrus.leavetown.com/property-detail.aspx?propertyid=374");
-		
+		connection.setRequestProperty("Referer", "https://cirrus.leavetown.com/property-detail.aspx?propertyid=" + propertyId);
+
 		OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
 		writer.write(postBody);
 		writer.close();
@@ -79,31 +102,59 @@ public class Crawler {
 			resultText.append(line);
 		}
 		br.close();
+		System.out.println("\nPosting complete, response code = " + connection.getResponseCode());
 		connection.disconnect();
-		System.out.println(resultText);
 	}
 
+	private static Map<String, String> getTestPropertyIdMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("Budget", "374");
+
+		return map;
+	}
+
+	// Note: this returns a map that is the reverse of the json file, with format (roomDescription : propertyId)
 	private static Map<String, String> getPropertyIdMap() throws IOException {
 		Map<String, String> propertyIdMap = new HashMap<String, String>();
-		String fileText = new String(Files.readAllBytes(Paths.get(LEAVE_TOWN_POST_DATA_PATH + "jsonPath")));
+		String fileText = new String(Files.readAllBytes(Paths.get(LEAVE_TOWN_POST_DATA_PATH + "propertyIDMappings.json")));
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode root = objectMapper.readTree(fileText);
 
-		return propertyIdMap;
+		root.fields().forEachRemaining(field -> {
+			String propertyId = field.getKey();
+			String roomDescription = field.getValue().asText();
+			propertyIdMap.put(propertyId, roomDescription);
+		});
+
+		Map<String, Integer> roomDescriptionCounts = new HashMap<String, Integer>();
+		propertyIdMap.forEach((propertyId, roomDescription) -> {
+			if (roomDescriptionCounts.containsKey(roomDescription)) {
+				Integer formerValue = roomDescriptionCounts.get(roomDescription);
+				roomDescriptionCounts.put(roomDescription, formerValue + 1);
+			} else {
+				roomDescriptionCounts.put(roomDescription, 1);
+			}
+		});
+
+		// filter out duplicates
+		Map<String, String> reverseMap = new HashMap<String, String>();
+		propertyIdMap.forEach((propertyId, roomDescription) -> {
+			if (roomDescriptionCounts.get(roomDescription) == 1) {
+				reverseMap.put(roomDescription, propertyId);
+			}
+		});
+		return reverseMap;
 	}
 
-	private static String convertToCSV(RoomAvailability roomAvailability) {
+	private static String convertToCSV(Map<Calendar, Optional<Boolean>> totalAvailability, Calendar startDate, Calendar endDate) {
 		StringBuffer csvString = new StringBuffer();
 		csvString.append("Availability,");
 
-		Calendar startDate = roomAvailability.getEarliestKnownDate();
-		Calendar endDate = roomAvailability.getLatestKnownDate();
 		Set<Calendar> dateRange = DateUtils.getOrderedDateRange(startDate, endDate);
-		Map<Calendar, Optional<Boolean>> totalAvailability = roomAvailability.getTotalAvailability();
 
 		dateRange.forEach(date -> {
 			Optional<Boolean> isAvailable = totalAvailability.get(date);
-			csvString.append(Symbols.getDisplaySymbol(isAvailable));
+			csvString.append(Symbols.getDisplaySymbol(isAvailable).trim());
 			csvString.append(',');
 		});
 		return csvString.toString();
