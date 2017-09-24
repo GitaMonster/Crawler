@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DateUtils {
 
@@ -43,6 +44,11 @@ public class DateUtils {
 		Set<Calendar> dateRange = new LinkedHashSet<Calendar>();
 		constructDateRange(startDate, endDate, dateRange);
 		return dateRange;
+	}
+
+	public static Set<Calendar> getOrderedDateRange(Set<Calendar> dateRange) {
+		return dateRange.stream().sorted((date1, date2) -> (int) (date1.getTimeInMillis() - date2.getTimeInMillis()))
+					.collect(Collectors.toSet());
 	}
 
 	private static void constructDateRange(Calendar startDate, Calendar endDate, Set<Calendar> dateRange) {

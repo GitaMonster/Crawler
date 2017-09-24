@@ -15,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +39,7 @@ import util.ExcelWriter;
 
 public class BigWhite {
 
-	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/hotelData/BigWhite/";
+	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/resources/resortData/BigWhite/";
 	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 22);
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
 
@@ -106,6 +109,10 @@ public class BigWhite {
 		hotelAvailabilities.put(HotelName.BIG_WHITE_WHITEFOOT, whitefootAvailability);
 
 		return new ResortAvailability(ResortName.BIG_WHITE, hotelAvailabilities);
+	}
+
+	public static ResortAvailability getResortAvailability() throws MalformedURLException, IOException {
+		return getResortAvailability(FIRST_DATE_OF_SEASON, FINAL_DATE_OF_SEASON);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -216,6 +223,52 @@ public class BigWhite {
 			}
 		}
 		return requestDates;
+	}
+
+	public static Set<RoomAvailability> getRoomAvailabilitiesForProperty(ResortAvailability resortAvailability,
+			String roomDescription) {
+		Set<RoomAvailability> roomAvailabilitiesForProperty = new HashSet<RoomAvailability>(); 
+
+		resortAvailability.getHotelAvailabilities().values().forEach(hotelAvailability -> {
+			hotelAvailability.getRoomAvailabilities().forEach((fullRoomNumber, roomAvailability) -> {
+				if (fullRoomNumber.split("-")[0].trim().equals(roomDescription)) {
+					roomAvailabilitiesForProperty.add(roomAvailability);
+				}
+			});
+		});
+		return roomAvailabilitiesForProperty;
+	}
+
+	public static Map<Calendar, Optional<Boolean>> convertToPropertyAvailability(Set<RoomAvailability> roomAvailabilities) {
+		return convertToPropertyAvailability(roomAvailabilities, FIRST_DATE_OF_SEASON, FINAL_DATE_OF_SEASON);
+	}
+
+	public static Map<Calendar, Optional<Boolean>> convertToPropertyAvailability(Set<RoomAvailability> roomAvailabilities,
+			Calendar startDate, Calendar endDate) {
+		Map<Calendar, Optional<Boolean>> propertyAvailabilities = new HashMap<Calendar, Optional<Boolean>>();
+		String roomDescription = roomAvailabilities.stream().findFirst().get().getRoomNumber().split("-")[0].trim();
+		if (!roomAvailabilities.stream().anyMatch(roomAvailability -> roomAvailability.getRoomNumber().split("-")[0].trim().equals(roomDescription))) {
+			throw new RuntimeException("Error: cannot convert room availability set to property format because the property descriptions do not all match");
+		}
+
+		DateUtils.getDateRange(startDate, endDate).forEach(date -> {
+			Optional<Boolean> isPropertyAvailable;
+
+			Set<Optional<Boolean>> availabilitySet = roomAvailabilities.stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
+			if (availabilitySet.stream().anyMatch(availability -> availability.isPresent() && availability.get().equals(true))) {
+				// At least one available
+				isPropertyAvailable = Optional.of(true);
+			} else if (availabilitySet.stream().anyMatch(availability -> !availability.isPresent())) {
+				// At least one blocked
+				isPropertyAvailable = Optional.empty();
+			} else {
+				// All unavailable
+				isPropertyAvailable = Optional.of(false);
+			}
+
+			propertyAvailabilities.put(date, isPropertyAvailable);
+		});
+		return propertyAvailabilities;
 	}
 
 	private static void readRoomDataFromFile(String filePath, Map<String, Object> roomsData) throws IOException {

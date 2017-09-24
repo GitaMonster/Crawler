@@ -122,7 +122,7 @@ public class ExcelWriter {
                 		+ "a null value was returned for date " + DateUtils.getReadableDateString(date) + 
                 		" for room " + currentRoomAvailability.getRoomNumber());
             }
-            Label availabilityContent = createCenteredCellLabel(currentColumn, row, createCellContent(isAvailable));
+            Label availabilityContent = createCenteredCellLabel(currentColumn, row, Symbols.getDisplaySymbol(isAvailable));
 
             excelSheet.addCell(availabilityContent);
             currentColumn++;
@@ -146,14 +146,6 @@ public class ExcelWriter {
 		WritableCellFormat newFormat = new WritableCellFormat(readFormat);
 		newFormat.setAlignment(Alignment.CENTRE);
 		cell.setCellFormat(newFormat);
-    }
-
-    private static String createCellContent(Optional<Boolean> isAvailable) {
-        if (isAvailable.isPresent()) {
-        	return isAvailable.get() ? "Y" : "X";
-        } else {
-        	return " ";
-        }
     }
 }
 
