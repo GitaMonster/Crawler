@@ -52,26 +52,33 @@ public class BigWhite {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
 		Calendar endDate = FINAL_DATE_OF_SEASON;
 
-		ResortAvailability bigWhiteAvailability = getResortAvailability(startDate, endDate);
-
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK));
-        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE));
-        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE));
-        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE));
-        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES));
-        ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING));
-		ExcelWriter.main(bigWhiteAvailability.getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate));
+        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate));
+        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate));
+        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate));
+        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate));
+        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate));
+		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate));
     }
 
+	/***
+	 * Gets the availability for all of Big White (Warning, it can take a long time)
+	 *
+	 * @param startDate
+	 * @param endDate
+	 * @return Resort Availability
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
 	public static ResortAvailability getResortAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
 		HotelAvailability bearsPawAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate);
 		HotelAvailability blackBearAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate);

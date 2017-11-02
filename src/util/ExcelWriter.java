@@ -32,7 +32,7 @@ public class ExcelWriter {
 	private static final String EXCEL_FILE_PATH = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/";
 	private static final int DATE_STARTING_COLUMN = 3;  //arbitrary; very first column is 3
 
-    public static void main(HotelAvailability hotelAvailability) throws Exception {
+    public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
     	
     	String hotelName = hotelAvailability.getName().getDisplayName();
     	String filePath = EXCEL_FILE_PATH + hotelName + ".xls";
