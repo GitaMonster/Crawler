@@ -73,39 +73,39 @@ public class BigWhite {
     }
 
 	public static ResortAvailability getResortAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
-//		HotelAvailability bearsPawAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate);
-//		HotelAvailability blackBearAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate);
-//		HotelAvailability bulletCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate);
-//		HotelAvailability chateauRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate);
-//		HotelAvailability copperKettleAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate);
-//		HotelAvailability eaglesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate);
-//		HotelAvailability grizzlyAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate);
-//		HotelAvailability plazaRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate);
-//		HotelAvailability ptarmiganAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate);
-//		HotelAvailability snowyCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate);
-//		HotelAvailability stonebridgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate);
-//		HotelAvailability stonegateAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate);
-//		HotelAvailability sundanceAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate);
-//		HotelAvailability toweringPinesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate);
-//		HotelAvailability trappersCrossingAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate);
+		HotelAvailability bearsPawAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate);
+		HotelAvailability blackBearAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate);
+		HotelAvailability bulletCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate);
+		HotelAvailability chateauRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate);
+		HotelAvailability copperKettleAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate);
+		HotelAvailability eaglesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate);
+		HotelAvailability grizzlyAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate);
+		HotelAvailability plazaRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate);
+		HotelAvailability ptarmiganAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate);
+		HotelAvailability snowyCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate);
+		HotelAvailability stonebridgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate);
+		HotelAvailability stonegateAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate);
+		HotelAvailability sundanceAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate);
+		HotelAvailability toweringPinesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate);
+		HotelAvailability trappersCrossingAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate);
 		HotelAvailability whitefootAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate);
 
 		Map<HotelName, HotelAvailability> hotelAvailabilities = new HashMap<HotelName, HotelAvailability>();
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_BEARS_PAW, bearsPawAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_BLACK_BEAR, blackBearAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_BULLET_CREEK, bulletCreekAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_CHATEAU_RIDGE, chateauRidgeAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_COPPER_KETTLE, copperKettleAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_EAGLES, eaglesAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_GRIZZLY, grizzlyAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_PLAZA_RIDGE, plazaRidgeAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_PTARMINGAN, ptarmiganAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_SNOWY_CREEK, snowyCreekAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEBRIDGE, stonebridgeAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEGATE, stonegateAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_SUNDANCE, sundanceAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_TOWERING_PINES, toweringPinesAvailability);
-//		hotelAvailabilities.put(HotelName.BIG_WHITE_TRAPPERS_CROSSING, trappersCrossingAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_BEARS_PAW, bearsPawAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_BLACK_BEAR, blackBearAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_BULLET_CREEK, bulletCreekAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_CHATEAU_RIDGE, chateauRidgeAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_COPPER_KETTLE, copperKettleAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_EAGLES, eaglesAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_GRIZZLY, grizzlyAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_PLAZA_RIDGE, plazaRidgeAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_PTARMINGAN, ptarmiganAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_SNOWY_CREEK, snowyCreekAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEBRIDGE, stonebridgeAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEGATE, stonegateAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_SUNDANCE, sundanceAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_TOWERING_PINES, toweringPinesAvailability);
+		hotelAvailabilities.put(HotelName.BIG_WHITE_TRAPPERS_CROSSING, trappersCrossingAvailability);
 		hotelAvailabilities.put(HotelName.BIG_WHITE_WHITEFOOT, whitefootAvailability);
 
 		return new ResortAvailability(ResortName.BIG_WHITE, hotelAvailabilities);
@@ -167,6 +167,7 @@ public class BigWhite {
 		}
 	}
 
+	// The fetcher; sends a request to the Big White servers for one page of availability; gets response in form of string containing entire webpage html
 	private static String getPage(String urlString) throws MalformedURLException, IOException {
 		HttpURLConnection connection;
 		URL url = new URL(urlString);
