@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class BigWhite {
 	private static final String RESORT_CODE_KEY = "resortCode";
 
 	@SuppressWarnings("serial")
-	private static final Set<HotelName> HOTELS_TO_GET = new HashSet<HotelName>() {{
+	private static final Set<HotelName> HOTELS_TO_GET = new LinkedHashSet<HotelName>() {{
 		add(HotelName.BIG_WHITE_BEARS_PAW);
 		add(HotelName.BIG_WHITE_BLACK_BEAR);
 		add(HotelName.BIG_WHITE_BULLET_CREEK);
@@ -69,7 +70,7 @@ public class BigWhite {
 		add(HotelName.BIG_WHITE_WHITEFOOT);
 	}};
 
-	public static void main(String[] args) throws Exception {
+	public static void main2(String[] args) throws Exception {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
 		Calendar endDate = FINAL_DATE_OF_SEASON;
 
@@ -77,7 +78,7 @@ public class BigWhite {
 			HotelAvailability hotelAvailability = getAvailabilityForHotel(hotel, startDate, endDate);
 
 			if (AGGREGATE_ROOM_TYPES) {
-				Set<RoomAvailability> roomAvailabilities = new HashSet<RoomAvailability>(hotelAvailability.getRoomAvailabilities().values());
+				Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
 				Map<String, RoomAvailability> aggregatedRoomAvailabilities = getAggregatedAvailabilitiesForRoomType(roomAvailabilities, startDate, endDate);
 				hotelAvailability.setRoomAvailabilities(aggregatedRoomAvailabilities);
 			}
@@ -220,15 +221,19 @@ public class BigWhite {
 		return requestDates;
 	}
 
-	public static Map<String, RoomAvailability> getAggregatedAvailabilitiesForRoomType(Set<RoomAvailability> roomAvailabilities,
+	public static Map<String, RoomAvailability> getAggregatedAvailabilitiesForRoomType(Map<String, RoomAvailability> roomAvailabilities,
 			Calendar startDate, Calendar endDate) {
 		Map<String, RoomAvailability> aggregatedRoomAvailabilities = new HashMap<String, RoomAvailability>();
 
-		Set<String> uniqueRoomDescriptions = getUniqueRoomDescriptions(roomAvailabilities);
+		Set<String> uniqueRoomDescriptions = getUniqueRoomDescriptions(roomAvailabilities.keySet());
 
 		uniqueRoomDescriptions.forEach(roomDescription -> {
-			Set<RoomAvailability> groupedRoomAvailabilities = roomAvailabilities.stream().filter(roomAvailability -> 
-				roomAvailability.getRoomNumber().split("-")[0].trim().equals(roomDescription)).collect(Collectors.toSet());
+			Map<String, RoomAvailability> groupedRoomAvailabilities = new HashMap<String, RoomAvailability>();
+			for (String key : roomAvailabilities.keySet()) {
+				if (key.split("-")[0].trim().equals(roomDescription)) {
+					groupedRoomAvailabilities.put(key, roomAvailabilities.get(key));
+				}
+			}
 
 			RoomAvailability aggregatedRoomAvailability = getAggregatedRoomAvailability(groupedRoomAvailabilities, startDate, endDate);
 			aggregatedRoomAvailabilities.put(roomDescription, aggregatedRoomAvailability);
@@ -236,18 +241,18 @@ public class BigWhite {
 		return aggregatedRoomAvailabilities;
 	}
 
-	private static RoomAvailability getAggregatedRoomAvailability(Set<RoomAvailability> groupedRoomAvailabilities,
+	private static RoomAvailability getAggregatedRoomAvailability(Map<String, RoomAvailability> groupedRoomAvailabilities,
 			Calendar startDate, Calendar endDate) {
 		Map<Calendar, Optional<Boolean>> newTotalAvailability = new HashMap<Calendar, Optional<Boolean>>();
-		String roomDescription = groupedRoomAvailabilities.stream().findFirst().get().getRoomNumber().split("-")[0].trim();
-		if (!groupedRoomAvailabilities.stream().anyMatch(roomAvailability -> roomAvailability.getRoomNumber().split("-")[0].trim().equals(roomDescription))) {
+		String roomDescription = groupedRoomAvailabilities.keySet().stream().findFirst().get().split("-")[0].trim();
+		if (!groupedRoomAvailabilities.keySet().stream().anyMatch(roomAvailability -> roomAvailability.split("-")[0].trim().equals(roomDescription))) {
 			throw new RuntimeException("Error: cannot convert room availability set to aggregated format because the room descriptions do not all match");
 		}
 
 		DateUtils.getDateRange(startDate, endDate).forEach(date -> {
 			Optional<Boolean> isRoomTypeAvailable;
 
-			Set<Optional<Boolean>> availabilitySet = groupedRoomAvailabilities.stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
+			Set<Optional<Boolean>> availabilitySet = groupedRoomAvailabilities.values().stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
 			if (availabilitySet.stream().anyMatch(availability -> availability.isPresent() && availability.get().equals(true))) {
 				// At least one available
 				isRoomTypeAvailable = Optional.of(true);
@@ -264,8 +269,8 @@ public class BigWhite {
 		return new RoomAvailability(roomDescription, newTotalAvailability);
 	}
 
-	private static Set<String> getUniqueRoomDescriptions(Set<RoomAvailability> roomAvailabilities) {
-		return roomAvailabilities.stream().map(roomAvailability -> roomAvailability.getRoomNumber().split("-")[0].trim()).collect(Collectors.toSet());
+	private static Set<String> getUniqueRoomDescriptions(Set<String> roomAvailabilities) {
+		return roomAvailabilities.stream().map(roomAvailability -> roomAvailability.split("-")[0].trim()).collect(Collectors.toSet());
 	}
 
 	// Is this needed? - Maybe for Leavetown direct posting
