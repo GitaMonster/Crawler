@@ -70,7 +70,7 @@ public class BigWhite {
 		add(HotelName.BIG_WHITE_WHITEFOOT);
 	}};
 
-	public static void main2(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
 		Calendar endDate = FINAL_DATE_OF_SEASON;
 
