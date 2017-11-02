@@ -39,6 +39,7 @@ import util.ExcelWriter;
 
 public class BigWhite {
 
+	private static final boolean AGGREGATE_ROOM_TYPES = true;
 	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/resources/resortData/BigWhite/";
 	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 22);
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
@@ -48,26 +49,41 @@ public class BigWhite {
 	private static final String ROOM_NUMBER_CODE_KEY = "roomNumberCode";
 	private static final String RESORT_CODE_KEY = "resortCode";
 
+	@SuppressWarnings("serial")
+	private static final Set<HotelName> HOTELS_TO_GET = new HashSet<HotelName>() {{
+		add(HotelName.BIG_WHITE_BEARS_PAW);
+		add(HotelName.BIG_WHITE_BLACK_BEAR);
+		add(HotelName.BIG_WHITE_BULLET_CREEK);
+		add(HotelName.BIG_WHITE_CHATEAU_RIDGE);
+		add(HotelName.BIG_WHITE_COPPER_KETTLE);
+		add(HotelName.BIG_WHITE_EAGLES);
+		add(HotelName.BIG_WHITE_GRIZZLY);
+		add(HotelName.BIG_WHITE_PLAZA_RIDGE);
+		add(HotelName.BIG_WHITE_PTARMINGAN);
+		add(HotelName.BIG_WHITE_SNOWY_CREEK);
+		add(HotelName.BIG_WHITE_STONEBRIDGE);
+		add(HotelName.BIG_WHITE_STONEGATE);
+		add(HotelName.BIG_WHITE_SUNDANCE);
+		add(HotelName.BIG_WHITE_TOWERING_PINES);
+		add(HotelName.BIG_WHITE_TRAPPERS_CROSSING);
+		add(HotelName.BIG_WHITE_WHITEFOOT);
+	}};
+
 	public static void main(String[] args) throws Exception {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
 		Calendar endDate = FINAL_DATE_OF_SEASON;
 
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate));
-        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate));
-        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate));
-        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate));
-        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate));
-        ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate));
-		ExcelWriter.writeHotelAvailability(getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate));
+		for (HotelName hotel : HOTELS_TO_GET) {
+			HotelAvailability hotelAvailability = getAvailabilityForHotel(hotel, startDate, endDate);
+
+			if (AGGREGATE_ROOM_TYPES) {
+				Set<RoomAvailability> roomAvailabilities = new HashSet<RoomAvailability>(hotelAvailability.getRoomAvailabilities().values());
+				Map<String, RoomAvailability> aggregatedRoomAvailabilities = getAggregatedAvailabilitiesForRoomType(roomAvailabilities, startDate, endDate);
+				hotelAvailability.setRoomAvailabilities(aggregatedRoomAvailabilities);
+			}
+
+			ExcelWriter.writeHotelAvailability(hotelAvailability);
+		}
     }
 
 	/***
@@ -80,40 +96,13 @@ public class BigWhite {
 	 * @throws IOException
 	 */
 	public static ResortAvailability getResortAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
-		HotelAvailability bearsPawAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BEARS_PAW, startDate, endDate);
-		HotelAvailability blackBearAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BLACK_BEAR, startDate, endDate);
-		HotelAvailability bulletCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_BULLET_CREEK, startDate, endDate);
-		HotelAvailability chateauRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_CHATEAU_RIDGE, startDate, endDate);
-		HotelAvailability copperKettleAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_COPPER_KETTLE, startDate, endDate);
-		HotelAvailability eaglesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_EAGLES, startDate, endDate);
-		HotelAvailability grizzlyAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_GRIZZLY, startDate, endDate);
-		HotelAvailability plazaRidgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PLAZA_RIDGE, startDate, endDate);
-		HotelAvailability ptarmiganAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_PTARMINGAN, startDate, endDate);
-		HotelAvailability snowyCreekAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SNOWY_CREEK, startDate, endDate);
-		HotelAvailability stonebridgeAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEBRIDGE, startDate, endDate);
-		HotelAvailability stonegateAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_STONEGATE, startDate, endDate);
-		HotelAvailability sundanceAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_SUNDANCE, startDate, endDate);
-		HotelAvailability toweringPinesAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TOWERING_PINES, startDate, endDate);
-		HotelAvailability trappersCrossingAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_TRAPPERS_CROSSING, startDate, endDate);
-		HotelAvailability whitefootAvailability = getAvailabilityForHotel(HotelName.BIG_WHITE_WHITEFOOT, startDate, endDate);
+		Set<HotelAvailability> acquiredHotelAvailabilities = new HashSet<HotelAvailability>();
+		for (HotelName hotel : HOTELS_TO_GET) {
+			acquiredHotelAvailabilities.add(getAvailabilityForHotel(hotel, startDate, endDate));
+		}
 
 		Map<HotelName, HotelAvailability> hotelAvailabilities = new HashMap<HotelName, HotelAvailability>();
-		hotelAvailabilities.put(HotelName.BIG_WHITE_BEARS_PAW, bearsPawAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_BLACK_BEAR, blackBearAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_BULLET_CREEK, bulletCreekAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_CHATEAU_RIDGE, chateauRidgeAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_COPPER_KETTLE, copperKettleAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_EAGLES, eaglesAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_GRIZZLY, grizzlyAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_PLAZA_RIDGE, plazaRidgeAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_PTARMINGAN, ptarmiganAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_SNOWY_CREEK, snowyCreekAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEBRIDGE, stonebridgeAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_STONEGATE, stonegateAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_SUNDANCE, sundanceAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_TOWERING_PINES, toweringPinesAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_TRAPPERS_CROSSING, trappersCrossingAvailability);
-		hotelAvailabilities.put(HotelName.BIG_WHITE_WHITEFOOT, whitefootAvailability);
+		acquiredHotelAvailabilities.forEach(hotelAvailability -> hotelAvailabilities.put(hotelAvailability.getName(), hotelAvailability));
 
 		return new ResortAvailability(ResortName.BIG_WHITE, hotelAvailabilities);
 	}
@@ -231,6 +220,55 @@ public class BigWhite {
 		return requestDates;
 	}
 
+	public static Map<String, RoomAvailability> getAggregatedAvailabilitiesForRoomType(Set<RoomAvailability> roomAvailabilities,
+			Calendar startDate, Calendar endDate) {
+		Map<String, RoomAvailability> aggregatedRoomAvailabilities = new HashMap<String, RoomAvailability>();
+
+		Set<String> uniqueRoomDescriptions = getUniqueRoomDescriptions(roomAvailabilities);
+
+		uniqueRoomDescriptions.forEach(roomDescription -> {
+			Set<RoomAvailability> groupedRoomAvailabilities = roomAvailabilities.stream().filter(roomAvailability -> 
+				roomAvailability.getRoomNumber().split("-")[0].trim().equals(roomDescription)).collect(Collectors.toSet());
+
+			RoomAvailability aggregatedRoomAvailability = getAggregatedRoomAvailability(groupedRoomAvailabilities, startDate, endDate);
+			aggregatedRoomAvailabilities.put(roomDescription, aggregatedRoomAvailability);
+		});
+		return aggregatedRoomAvailabilities;
+	}
+
+	private static RoomAvailability getAggregatedRoomAvailability(Set<RoomAvailability> groupedRoomAvailabilities,
+			Calendar startDate, Calendar endDate) {
+		Map<Calendar, Optional<Boolean>> newTotalAvailability = new HashMap<Calendar, Optional<Boolean>>();
+		String roomDescription = groupedRoomAvailabilities.stream().findFirst().get().getRoomNumber().split("-")[0].trim();
+		if (!groupedRoomAvailabilities.stream().anyMatch(roomAvailability -> roomAvailability.getRoomNumber().split("-")[0].trim().equals(roomDescription))) {
+			throw new RuntimeException("Error: cannot convert room availability set to aggregated format because the room descriptions do not all match");
+		}
+
+		DateUtils.getDateRange(startDate, endDate).forEach(date -> {
+			Optional<Boolean> isRoomTypeAvailable;
+
+			Set<Optional<Boolean>> availabilitySet = groupedRoomAvailabilities.stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
+			if (availabilitySet.stream().anyMatch(availability -> availability.isPresent() && availability.get().equals(true))) {
+				// At least one available
+				isRoomTypeAvailable = Optional.of(true);
+			} else if (availabilitySet.stream().anyMatch(availability -> !availability.isPresent())) {
+				// At least one blocked
+				isRoomTypeAvailable = Optional.empty();
+			} else {
+				// All unavailable
+				isRoomTypeAvailable = Optional.of(false);
+			}
+
+			newTotalAvailability.put(date, isRoomTypeAvailable);
+		});
+		return new RoomAvailability(roomDescription, newTotalAvailability);
+	}
+
+	private static Set<String> getUniqueRoomDescriptions(Set<RoomAvailability> roomAvailabilities) {
+		return roomAvailabilities.stream().map(roomAvailability -> roomAvailability.getRoomNumber().split("-")[0].trim()).collect(Collectors.toSet());
+	}
+
+	// Is this needed? - Maybe for Leavetown direct posting
 	public static Set<RoomAvailability> getRoomAvailabilitiesForProperty(ResortAvailability resortAvailability,
 			String roomDescription) {
 		Set<RoomAvailability> roomAvailabilitiesForProperty = new HashSet<RoomAvailability>(); 
@@ -245,10 +283,12 @@ public class BigWhite {
 		return roomAvailabilitiesForProperty;
 	}
 
+	// Is this needed?  - Maybe for Leavetown direct posting
 	public static Map<Calendar, Optional<Boolean>> convertToPropertyAvailability(Set<RoomAvailability> roomAvailabilities) {
 		return convertToPropertyAvailability(roomAvailabilities, FIRST_DATE_OF_SEASON, FINAL_DATE_OF_SEASON);
 	}
 
+	// Is this needed?  - Maybe for Leavetown direct posting
 	public static Map<Calendar, Optional<Boolean>> convertToPropertyAvailability(Set<RoomAvailability> roomAvailabilities,
 			Calendar startDate, Calendar endDate) {
 		Map<Calendar, Optional<Boolean>> propertyAvailabilities = new HashMap<Calendar, Optional<Boolean>>();
