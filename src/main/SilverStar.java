@@ -21,13 +21,17 @@ import model.ResortName;
 import model.RoomAvailability;
 import parser.SilverStarParser;
 import util.DateUtils;
+import util.ExcelWriter;
 
 public class SilverStar {
 
+	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 23);
+	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 8);
+
 	public static void main(String[] args) throws Exception {
 
-		Calendar startDate = new GregorianCalendar(2017, 11, 14);
-		Calendar endDate = new GregorianCalendar(2017, 11, 30);
+		Calendar startDate = FIRST_DATE_OF_SEASON;
+		Calendar endDate = FINAL_DATE_OF_SEASON;
 
 		ResortAvailability resortAvailability = getFullAvailability(startDate, endDate);
 
@@ -35,6 +39,13 @@ public class SilverStar {
 		RoomAvailability roomAvailability = resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SNOWBIRD).getAvailabilityForRoomNumber(roomNumber);
 		System.out.println("\nAvailable dates for 1 Bedroom Executive:");
 		roomAvailability.getAvailableDates().forEach(date -> System.out.println(DateUtils.getReadableDateString(date)));
+
+		// Write to excel file
+		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SNOWBIRD));
+		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_FIRELIGHT));
+		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_LORD_ABERDEEN));
+		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SILVER_CREEK));
+		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_VACATION_HOMES));
 	}
 
 	public static ResortAvailability getFullAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
