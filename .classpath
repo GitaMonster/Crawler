@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="jarDependencies/jackson-core-2.9.0.jar"/>
 	<classpathentry kind="lib" path="jarDependencies/jackson-databind-2.9.0.jar"/>
 	<classpathentry kind="lib" path="jarDependencies/jsoup-1.10.3.jar"/>
+	<classpathentry kind="lib" path="jarDependencies/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
