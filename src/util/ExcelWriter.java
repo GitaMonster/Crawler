@@ -21,6 +21,7 @@ import jxl.write.Number;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 import model.HotelAvailability;
+import model.HotelName;
 import model.RoomAvailability;
 
 
@@ -29,13 +30,13 @@ import model.RoomAvailability;
  */
 public class ExcelWriter {
 
-	private static final String EXCEL_FILE_PATH = System.getProperty("user.home") + "/Desktop/Crawling/ExcelOutput/";
+	public static final String EXCEL_FILE_PATH = System.getProperty("user.dir") + "/resources/ExcelOutput/";
 	private static final int DATE_STARTING_COLUMN = 3;  //arbitrary; very first column is 3
 
     public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
     	
-    	String hotelName = hotelAvailability.getName().getDisplayName();
-    	String filePath = EXCEL_FILE_PATH + hotelName + ".xls";
+    	HotelName hotelName = hotelAvailability.getName();
+    	String filePath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName() + "/" + hotelName.getDisplayName() + ".xls";
 
         Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
         Calendar earliestDate = hotelAvailability.getEarliestKnownDate();
@@ -63,7 +64,9 @@ public class ExcelWriter {
         } finally {
         	myFirstWbook.close();
         }
+
     }
+
 
     //add the month names and dates into the top of the sheet
     private static void writeAllDateLabels(WritableSheet excelSheet, Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {

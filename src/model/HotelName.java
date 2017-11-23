@@ -42,6 +42,10 @@ public enum HotelName {
 		}).findFirst().orElse(null);
 	}
 
+    public ResortName getResortName(){
+        return this.resortName;
+    }
+
 	public String getName() {
 		return this.name;
 	}

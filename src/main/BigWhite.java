@@ -36,6 +36,7 @@ import model.ResortName;
 import model.RoomAvailability;
 import parser.BigWhiteParser;
 import util.DateUtils;
+import util.EmailAttachmentSender;
 import util.ExcelWriter;
 
 public class BigWhite {
@@ -70,7 +71,7 @@ public class BigWhite {
 		add(HotelName.BIG_WHITE_WHITEFOOT);
 	}};
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		Calendar startDate = FIRST_DATE_OF_SEASON;
 		Calendar endDate = FINAL_DATE_OF_SEASON;
 
@@ -85,6 +86,7 @@ public class BigWhite {
 
 			ExcelWriter.writeHotelAvailability(hotelAvailability);
 		}
+        EmailAttachmentSender.main(HOTELS_TO_GET);
     }
 
 	/***
