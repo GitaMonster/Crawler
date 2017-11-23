@@ -168,7 +168,7 @@ public class BigWhite {
 	private static String getPage(String urlString) throws MalformedURLException, IOException {
 		HttpURLConnection connection;
 		URL url = new URL(urlString);
-		
+
 		connection = (HttpURLConnection) url.openConnection();
 	    connection.setRequestMethod("GET");
 	    connection.setUseCaches(false);
