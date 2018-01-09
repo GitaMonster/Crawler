@@ -43,7 +43,7 @@ public class BigWhite {
 
 	private static final boolean AGGREGATE_ROOM_TYPES = true;
 	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/resources/resortData/BigWhite/";
-	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 22);
+	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2018, 0, 8);
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
 
 	private static final String ROOM_NUMBERS_KEY = "rooms";
@@ -86,7 +86,7 @@ public class BigWhite {
 
 			ExcelWriter.writeHotelAvailability(hotelAvailability);
 		}
-        EmailAttachmentSender.main(HOTELS_TO_GET);
+         EmailAttachmentSender.main(HOTELS_TO_GET);
     }
 
 	/***
@@ -209,7 +209,9 @@ public class BigWhite {
 			Calendar currentDate = new GregorianCalendar(currentYearMonth.getYear(), currentYearMonth.getMonthValue() - 1,
 					startDate.get(Calendar.DAY_OF_MONTH));
 			Calendar lowerDateLimit = (Calendar) startDate.clone();
+			String lowerDateLimitString = DateUtils.getReadableDateString(lowerDateLimit);
 			while(!lowerDateLimit.after(endDate)) {
+				String currentDateString = DateUtils.getReadableDateString(currentDate);
 				requestDates.add(currentDate);
 				currentYearMonth = DateUtils.getYearMonthFromDate(currentDate).plusMonths(4);
 
@@ -217,7 +219,8 @@ public class BigWhite {
 				currentDate.set(Calendar.YEAR, currentYearMonth.getYear());
 				currentDate.set(Calendar.MONTH, currentYearMonth.getMonthValue() - 1);
 				lowerDateLimit = new GregorianCalendar(currentYearMonth.minusMonths(1).getYear(),
-						currentYearMonth.minusMonths(1).getMonthValue(), 1);
+						currentYearMonth.minusMonths(1).getMonthValue() - 1, 1);
+				lowerDateLimitString = DateUtils.getReadableDateString(lowerDateLimit);
 			}
 		}
 		return requestDates;
@@ -333,7 +336,7 @@ public class BigWhite {
 		if (propertyCodeNode != null) {
 			roomsData.put(PROPERTY_CODE_KEY, propertyCodeNode.asText());
 		} else {
-			roomsData.put(PROPERTY_CODE_KEY, Optional.empty());
+			roomsData.put(PROPERTY_CODE_KEY, null);
 		}
 		String roomNumberCode = root.get(ROOM_NUMBER_CODE_KEY).asText();
 		String resortCode = root.get(RESORT_CODE_KEY).asText();
