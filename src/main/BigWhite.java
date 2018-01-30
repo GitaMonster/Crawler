@@ -43,7 +43,7 @@ public class BigWhite {
 
 	private static final boolean AGGREGATE_ROOM_TYPES = true;
 	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/resources/resortData/BigWhite/";
-	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2018, 0, 8);
+	public static final Calendar FIRST_DATE_OF_SEASON = Calendar.getInstance();
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
 
 	private static final String ROOM_NUMBERS_KEY = "rooms";
@@ -80,7 +80,10 @@ public class BigWhite {
 
 			if (AGGREGATE_ROOM_TYPES) {
 				Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
-				Map<String, RoomAvailability> aggregatedRoomAvailabilities = getAggregatedAvailabilitiesForRoomType(roomAvailabilities, startDate, endDate);
+				Calendar earliestKnownDate = hotelAvailability.getEarliestKnownDate();
+				Calendar latestKnownDate = hotelAvailability.getLatestKnownDate();
+				Map<String, RoomAvailability> aggregatedRoomAvailabilities = getAggregatedAvailabilitiesForRoomType(roomAvailabilities,
+						earliestKnownDate, latestKnownDate);
 				hotelAvailability.setRoomAvailabilities(aggregatedRoomAvailabilities);
 			}
 

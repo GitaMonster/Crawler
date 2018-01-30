@@ -77,6 +77,7 @@ public class HotelAvailability {
 		return this.roomAvailabilities.get(roomNumber);
 	}
 
+	// Bug in this method?? It doesn't seem to check the availability content for the date, only that it's there
 	public List<String> getRoomNumbersAvailableOnDate(Calendar date) {
 		List<String> availableRoomNumbers = new ArrayList<String>();
 		for (RoomAvailability roomAvailability : this.roomAvailabilities.values()) {

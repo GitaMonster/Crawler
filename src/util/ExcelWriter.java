@@ -12,7 +12,6 @@ import jxl.write.WritableSheet;
 import java.io.File;
 import java.time.YearMonth;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -35,8 +34,11 @@ public class ExcelWriter {
 
     public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
     	
-    	HotelName hotelName = hotelAvailability.getName();
-    	String filePath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName() + "/" + hotelName.getDisplayName() + ".xls";
+        HotelName hotelName = hotelAvailability.getName();
+        String folderPath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName();
+        ensureOutputDirectoryExists(folderPath);
+
+        String filePath = folderPath + "/" + hotelName.getDisplayName() + ".xls";
 
         Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
         Calendar earliestDate = hotelAvailability.getEarliestKnownDate();
@@ -149,6 +151,13 @@ public class ExcelWriter {
 		WritableCellFormat newFormat = new WritableCellFormat(readFormat);
 		newFormat.setAlignment(Alignment.CENTRE);
 		cell.setCellFormat(newFormat);
+    }
+
+    private static void ensureOutputDirectoryExists(String folderPath) {
+        File outputFolder = new File(folderPath);
+        if (!outputFolder.exists()) {
+            outputFolder.mkdirs();
+        }
     }
 }
 
