@@ -1,20 +1,25 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "BC",
-  "rooms": {
-    "2 Bdrm Vacation Home w/Hot tub" : [
-      "08",
-      "09",
-      "10",
-      "11",
-      "12"
-    ],
-    "3 Bdrm Vacation Home w/ Hot Tub" : [
-      "13"
-    ],
-    "4 Bdrm Plus Den Vacation Home w/Hot Tub" : [
-      "03",
-      "16"
-    ]
-  }
+  "rooms": [{
+    "cirrusId": "1", 
+    "roomDescription": "2 Bdrm Vacation Home w/Hot tub",
+    "roomNumbers" : [ "08", "09", "10", "12" ]
+     }, {
+    "cirrusId": "2",
+    "roomDescription": "2 Bdrm Vacation Home w/Hot tub",
+    "roomNumbers" : [ "11" ]
+     }, {
+    "cirrusId": "3",
+    "roomDescription": "3 Bdrm Vacation Home w/ Hot Tub",
+    "roomNumbers" : [ "13" ]
+     }, {
+    "cirrusId": "4",
+    "roomDescription": "4 Bdrm Plus Den Vacation Home w/Hot Tub",
+    "roomNumbers" : [ "03" ]
+     }, {
+    "cirrusId": "5",
+    "roomDescription": "4 Bdrm Plus Den Vacation Home w/Hot Tub",
+    "roomNumbers" : [ "16" ]
+   }]
 }

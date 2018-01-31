@@ -4,9 +4,15 @@ import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import util.DateUtils;
 
 public class HotelAvailability {
 
@@ -77,7 +83,7 @@ public class HotelAvailability {
 		return this.roomAvailabilities.get(roomNumber);
 	}
 
-	// Bug in this method?? It doesn't seem to check the availability content for the date, only that it's there
+	// Bug in this method? It doesn't seem to check the availability content for the date, only that it's there
 	public List<String> getRoomNumbersAvailableOnDate(Calendar date) {
 		List<String> availableRoomNumbers = new ArrayList<String>();
 		for (RoomAvailability roomAvailability : this.roomAvailabilities.values()) {
@@ -93,6 +99,82 @@ public class HotelAvailability {
 		this.roomAvailabilities.values().forEach(roomAvailability -> {
 			roomAvailability.trimDateRange(earliestAllowedDate, latestAllowedDate);
 		});
+	}
+
+	public List<CirrusRoomGrouping> getGroupedRoomAvailabilities() {
+
+		List<CirrusRoomGrouping> cirrusRoomGroupings = new ArrayList<CirrusRoomGrouping>();
+		Set<Integer> cirrusIds = getCirrusIdSet();
+		cirrusIds.forEach(cirrusId -> {
+
+			Map<String, RoomAvailability> groupedRoomAvailabilities = new HashMap<String, RoomAvailability>();
+			roomAvailabilities.forEach((roomDescription, roomAvailability) -> {
+				if (roomAvailability.getCirrusId() == cirrusId) {
+					groupedRoomAvailabilities.put(roomDescription, roomAvailability);
+				}
+			});
+			Calendar startDate = getEarliestKnownDate();
+			Calendar endDate = getLatestKnownDate();
+			RoomAvailability aggregatedRoomAvailability = getAggregatedRoomAvailability(groupedRoomAvailabilities, startDate, endDate);
+
+			String roomDescription = aggregatedRoomAvailability.getRoomNumber();
+			List<String> roomNumbers = groupedRoomAvailabilities.values().stream().map(groupedRoomAvailability -> groupedRoomAvailability.getRoomNumber()).collect(Collectors.toList());
+			CirrusRoomGrouping newRoomGrouping = new CirrusRoomGrouping(cirrusId, roomDescription, roomNumbers, aggregatedRoomAvailability.getTotalAvailability());
+			cirrusRoomGroupings.add(newRoomGrouping);
+		});
+		return cirrusRoomGroupings;
+//		Map<Integer, CirrusRoomGrouping> groupedRoomAvailabilitiesMap = new HashMap<Integer, CirrusRoomGrouping>();
+//
+//		this.roomAvailabilities.forEach((fullRoomNumber, roomAvailability) -> {
+//			String[] roomData = fullRoomNumber.split("-");
+//			String roomDescription = roomData[0].trim();
+//			String roomNumber = roomData[1].trim();
+//			int cirrusId = roomAvailability.getCirrusId();
+//
+//			if (!groupedRoomAvailabilitiesMap.containsKey(cirrusId)) {
+//				List<String> newRoomNumbers = new ArrayList<String>();
+//				newRoomNumbers.add(roomNumber);
+//				CirrusRoomGrouping newRoomGrouping = new CirrusRoomGrouping(cirrusId, roomDescription, newRoomNumbers);
+//				groupedRoomAvailabilitiesMap.put(cirrusId, newRoomGrouping);
+//			} else {
+//				CirrusRoomGrouping existingGrouping = groupedRoomAvailabilitiesMap.get(cirrusId);
+//				existingGrouping.addRoomNumber(roomNumber);
+//			}
+//		});
+//		return groupedRoomAvailabilitiesMap.values().stream().collect(Collectors.toList());
+	}
+
+	// TODO: Consider moving this to a utility since it's identical to the regular Big White aggregator
+	private static RoomAvailability getAggregatedRoomAvailability(Map<String, RoomAvailability> groupedRoomAvailabilities,
+			Calendar startDate, Calendar endDate) {
+		Map<Calendar, Optional<Boolean>> newTotalAvailability = new HashMap<Calendar, Optional<Boolean>>();
+		String roomDescription = groupedRoomAvailabilities.keySet().stream().findFirst().get().split("-")[0].trim();
+		if (!groupedRoomAvailabilities.keySet().stream().anyMatch(roomAvailability -> roomAvailability.split("-")[0].trim().equals(roomDescription))) {
+			throw new RuntimeException("Error: cannot convert room availability set to aggregated format because the room descriptions do not all match");
+		}
+
+		DateUtils.getDateRange(startDate, endDate).forEach(date -> {
+			Optional<Boolean> isRoomTypeAvailable;
+
+			Set<Optional<Boolean>> availabilitySet = groupedRoomAvailabilities.values().stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
+			if (availabilitySet.stream().anyMatch(availability -> availability.isPresent() && availability.get().equals(true))) {
+				// At least one available
+				isRoomTypeAvailable = Optional.of(true);
+			} else if (availabilitySet.stream().anyMatch(availability -> !availability.isPresent())) {
+				// At least one blocked
+				isRoomTypeAvailable = Optional.empty();
+			} else {
+				// All unavailable
+				isRoomTypeAvailable = Optional.of(false);
+			}
+
+			newTotalAvailability.put(date, isRoomTypeAvailable);
+		});
+		return new RoomAvailability(roomDescription, newTotalAvailability);
+	}
+
+	private Set<Integer> getCirrusIdSet() {
+		return roomAvailabilities.values().stream().map(roomAvailability -> roomAvailability.getCirrusId()).collect(Collectors.toSet());
 	}
 
     @Override
