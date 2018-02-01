@@ -12,7 +12,7 @@ import jxl.write.WritableSheet;
 import java.io.File;
 import java.time.YearMonth;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -20,6 +20,7 @@ import java.util.Optional;
 import jxl.write.Number;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+import model.CirrusRoomGrouping;
 import model.HotelAvailability;
 import model.HotelName;
 import model.RoomAvailability;
@@ -33,10 +34,18 @@ public class ExcelWriter {
 	public static final String EXCEL_FILE_PATH = System.getProperty("user.dir") + "/resources/ExcelOutput/";
 	private static final int DATE_STARTING_COLUMN = 3;  //arbitrary; very first column is 3
 
-    public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
+	public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
+		writeHotelAvailability(hotelAvailability, false);
+	}
+	
+//    public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
+	public static void writeHotelAvailability(HotelAvailability hotelAvailability, boolean cirrusAggregation) throws Exception {
     	
-    	HotelName hotelName = hotelAvailability.getName();
-    	String filePath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName() + "/" + hotelName.getDisplayName() + ".xls";
+        HotelName hotelName = hotelAvailability.getName();
+        String folderPath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName();
+        ensureOutputDirectoryExists(folderPath);
+
+        String filePath = folderPath + "/" + hotelName.getDisplayName() + ".xls";
 
         Map<String, RoomAvailability> roomAvailabilities = hotelAvailability.getRoomAvailabilities();
         Calendar earliestDate = hotelAvailability.getEarliestKnownDate();
@@ -56,7 +65,12 @@ public class ExcelWriter {
             writeAllDateLabels(excelSheet, earliestDate, latestDate);
             //cycle through each room by unit number in the map of all rooms, update each of their availability in excel sheet under corresponding date
 
-            writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
+            if (cirrusAggregation) {
+            	writeAggregatedAvailabilityForAllRooms(excelSheet, hotelAvailability.getGroupedRoomAvailabilities(), earliestDate, latestDate);
+            } else {
+            	writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
+            }
+//            writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
 
             myFirstWbook.write();
         } catch (Exception e) {
@@ -132,6 +146,36 @@ public class ExcelWriter {
         }
     }
 
+    private static void writeAggregatedAvailabilityForAllRooms(WritableSheet excelSheet, List<CirrusRoomGrouping> groupedRoomAvailabilities,
+    		Calendar earliestDate, Calendar latestDate) throws RowsExceededException, WriteException {
+        int row = DATE_STARTING_COLUMN;
+        for (CirrusRoomGrouping roomGrouping : groupedRoomAvailabilities){  //for all unit numbers (rooms) in the map
+            Label propertynum = new Label(1, row, roomGrouping.getRoomDescription());
+            excelSheet.addCell(propertynum);
+            writeAggregatedAvailabilityForRoom(excelSheet, roomGrouping, row, earliestDate, latestDate);
+            row++;
+        }
+    }
+
+    private static void writeAggregatedAvailabilityForRoom(WritableSheet excelSheet, CirrusRoomGrouping cirrusRoomGrouping, int row,
+    		Calendar startDate, Calendar endDate) throws RowsExceededException, WriteException {
+    	int currentColumn = DATE_STARTING_COLUMN;
+
+        for (Calendar date : DateUtils.getOrderedDateRange(startDate, endDate)) {
+        	Map<Calendar, Optional<Boolean>> totalAvailability = cirrusRoomGrouping.getTotalAvailability();
+            Optional<Boolean> isAvailable = totalAvailability.get(date);
+            if (isAvailable == null) {
+                throw new RuntimeException("Error when writing to the excel sheet: "
+                		+ "a null value was returned for date " + DateUtils.getReadableDateString(date) + 
+                		" for room grouping " + cirrusRoomGrouping.getCirrusId());
+            }
+            Label availabilityContent = createCenteredCellLabel(currentColumn, row, Symbols.getDisplaySymbol(isAvailable));
+
+            excelSheet.addCell(availabilityContent);
+            currentColumn++;
+        }
+    }
+
     private static Label createCenteredCellLabel(int column, int row, String content) throws WriteException {
     	Label availabilityContent = new Label(column, row, content);
     	centerCell(availabilityContent);
@@ -149,6 +193,13 @@ public class ExcelWriter {
 		WritableCellFormat newFormat = new WritableCellFormat(readFormat);
 		newFormat.setAlignment(Alignment.CENTRE);
 		cell.setCellFormat(newFormat);
+    }
+
+    private static void ensureOutputDirectoryExists(String folderPath) {
+        File outputFolder = new File(folderPath);
+        if (!outputFolder.exists()) {
+            outputFolder.mkdirs();
+        }
     }
 }
 

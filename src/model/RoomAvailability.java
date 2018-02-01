@@ -16,6 +16,7 @@ import util.DateUtils;
 public class RoomAvailability {
 
 	private String roomNumber;
+	private int cirrusId;
 	private Map<Calendar, Optional<Boolean>> totalAvailability;
 
 	public RoomAvailability(String roomNumber, Map<Calendar, Optional<Boolean>> totalAvailability) {
@@ -29,6 +30,14 @@ public class RoomAvailability {
 
 	public String getRoomNumber() {
 		return this.roomNumber;
+	}
+
+	public void setCirrusId(int cirrusId) {
+		this.cirrusId = cirrusId;
+	}
+
+	public int getCirrusId() {
+		return this.cirrusId;
 	}
 
 	public void setTotalAvailability(Map<Calendar, Optional<Boolean>> totalAvailability) {
@@ -125,13 +134,9 @@ public class RoomAvailability {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((roomNumber == null) ? 0 : roomNumber.hashCode());
+        result = prime * result + (int) (cirrusId ^ (cirrusId >>> 32));
         result = prime * result + ((totalAvailability == null) ? 0 : totalAvailability.hashCode());
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "RoomAvailabilityForMonth [roomNumber = "+ roomNumber + ", dailyAvailability=" + totalAvailability + "]";
     }
 
     @Override
@@ -153,6 +158,9 @@ public class RoomAvailability {
         } else if (!roomNumber.equals(other.roomNumber)) {
             return false;
         }
+        if (this.cirrusId != other.cirrusId) {
+        	return false;
+        }
         if (totalAvailability == null) {
             if (other.totalAvailability != null) {
                 return false;
@@ -161,5 +169,10 @@ public class RoomAvailability {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "RoomAvailability [roomNumber = "+ roomNumber + ", cirrusId = " + cirrusId +", totalAvailability=" + totalAvailability + "]";
     }
 }

@@ -25,7 +25,7 @@ import util.ExcelWriter;
 
 public class SilverStar {
 
-	public static final Calendar FIRST_DATE_OF_SEASON = new GregorianCalendar(2017, 10, 23);
+	public static final Calendar FIRST_DATE_OF_SEASON = Calendar.getInstance();
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 8);
 
 	public static void main(String[] args) throws Exception {
