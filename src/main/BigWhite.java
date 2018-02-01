@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import model.CirrusRoomGrouping;
@@ -37,13 +36,17 @@ import model.ResortAvailability;
 import model.ResortName;
 import model.RoomAvailability;
 import parser.BigWhiteParser;
+import util.AggregatorUtils;
 import util.DateUtils;
 import util.EmailAttachmentSender;
 import util.ExcelWriter;
 
 public class BigWhite {
 
+	// AGGREGATE_ROOM_TYPES is deprecated
 	private static final boolean AGGREGATE_ROOM_TYPES = false;
+	private static final boolean AGGREGATE_FOR_CIRRUS = true;
+	private static final boolean SEND_EMAILS = true;
 	private static final String PATH_TO_HOTELS_DIRECTORY = System.getProperty("user.dir") + "/resources/resortData/BigWhite/";
 	public static final Calendar FIRST_DATE_OF_SEASON = Calendar.getInstance();
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 7);
@@ -55,22 +58,22 @@ public class BigWhite {
 
 	@SuppressWarnings("serial")
 	private static final Set<HotelName> HOTELS_TO_GET = new LinkedHashSet<HotelName>() {{
-//		add(HotelName.BIG_WHITE_BEARS_PAW);
-//		add(HotelName.BIG_WHITE_BLACK_BEAR);
+		add(HotelName.BIG_WHITE_BEARS_PAW);
+		add(HotelName.BIG_WHITE_BLACK_BEAR);
 		add(HotelName.BIG_WHITE_BULLET_CREEK);
-//		add(HotelName.BIG_WHITE_CHATEAU_RIDGE);
-//		add(HotelName.BIG_WHITE_COPPER_KETTLE);
-//		add(HotelName.BIG_WHITE_EAGLES);
-//		add(HotelName.BIG_WHITE_GRIZZLY);
-//		add(HotelName.BIG_WHITE_PLAZA_RIDGE);
-//		add(HotelName.BIG_WHITE_PTARMINGAN);
-//		add(HotelName.BIG_WHITE_SNOWY_CREEK);
-//		add(HotelName.BIG_WHITE_STONEBRIDGE);
-//		add(HotelName.BIG_WHITE_STONEGATE);
-//		add(HotelName.BIG_WHITE_SUNDANCE);
-//		add(HotelName.BIG_WHITE_TOWERING_PINES);
-//		add(HotelName.BIG_WHITE_TRAPPERS_CROSSING);
-//		add(HotelName.BIG_WHITE_WHITEFOOT);
+		add(HotelName.BIG_WHITE_CHATEAU_RIDGE);
+		add(HotelName.BIG_WHITE_COPPER_KETTLE);
+		add(HotelName.BIG_WHITE_EAGLES);
+		add(HotelName.BIG_WHITE_GRIZZLY);
+		add(HotelName.BIG_WHITE_PLAZA_RIDGE);
+		add(HotelName.BIG_WHITE_PTARMINGAN);
+		add(HotelName.BIG_WHITE_SNOWY_CREEK);
+		add(HotelName.BIG_WHITE_STONEBRIDGE);
+		add(HotelName.BIG_WHITE_STONEGATE);
+		add(HotelName.BIG_WHITE_SUNDANCE);
+		add(HotelName.BIG_WHITE_TOWERING_PINES);
+		add(HotelName.BIG_WHITE_TRAPPERS_CROSSING);
+		add(HotelName.BIG_WHITE_WHITEFOOT);
 	}};
 
 	public static void main(String... args) throws Exception {
@@ -89,10 +92,11 @@ public class BigWhite {
 				hotelAvailability.setRoomAvailabilities(aggregatedRoomAvailabilities);
 			}
 
-//			ExcelWriter.writeHotelAvailability(hotelAvailability);
-			ExcelWriter.writeHotelAvailability(hotelAvailability, true);
+			ExcelWriter.writeHotelAvailability(hotelAvailability, AGGREGATE_FOR_CIRRUS);
 		}
-//         EmailAttachmentSender.main(HOTELS_TO_GET);
+		if (SEND_EMAILS) {
+			EmailAttachmentSender.main(HOTELS_TO_GET);
+		}
     }
 
 	/***
@@ -125,7 +129,6 @@ public class BigWhite {
 			Calendar endDate) throws MalformedURLException, IOException {
 		Map<String, Object> roomsData = new HashMap<String, Object>();
 		readRoomDataFromFile(PATH_TO_HOTELS_DIRECTORY + hotelName.getName() + ".json", roomsData);
-//		List<String> fullRoomNumbers = (List<String>) roomsData.get(ROOM_NUMBERS_KEY);
 		List<CirrusRoomGrouping> roomGroupings = (List<CirrusRoomGrouping>) roomsData.get(ROOM_NUMBERS_KEY);
 		Optional<Object> propertyCode = roomsData.get(PROPERTY_CODE_KEY) == null ? Optional.empty() : Optional.of(roomsData.get(PROPERTY_CODE_KEY));
 		String roomNumberCode = (String) roomsData.get(ROOM_NUMBER_CODE_KEY);
@@ -135,7 +138,6 @@ public class BigWhite {
 		List<Calendar> requestDates = calculateRequestDates(startDate, endDate);
 
 		for (Calendar requestDate : requestDates) {
-//			addAvailabilityAroundDate(hotelAvailability, fullRoomNumbers, resortCode, requestDate, propertyCode, roomNumberCode);
 			addAvailabilityAroundDate(hotelAvailability, roomGroupings, resortCode, requestDate, propertyCode, roomNumberCode);
 		}
 		hotelAvailability.trimDateRange(startDate, endDate);
@@ -145,7 +147,6 @@ public class BigWhite {
 		return hotelAvailability;
 	}
 
-//	public static void addAvailabilityAroundDate(HotelAvailability hotelAvailability, List<String> fullRoomNumbers, String resortCode,
 	public static void addAvailabilityAroundDate(HotelAvailability hotelAvailability, List<CirrusRoomGrouping> roomGroupings, String resortCode,
 			Calendar requestDate, Optional<Object> propertyCode, String roomNumberCode) throws MalformedURLException, IOException {
 		BigWhiteParser parser = new BigWhiteParser();
@@ -153,12 +154,9 @@ public class BigWhite {
 
 		String requestDateString = DateUtils.getMonthDayYearFormat(requestDate);
 		// TODO: Randomize request order for rooms
-//		for (String fullRoomNumber : fullRoomNumbers) {
 		for (CirrusRoomGrouping roomGrouping : roomGroupings) {
 			for (String roomNumber : roomGrouping.getRoomNumbers()) {
-//				System.out.println("Getting data for room: " + fullRoomNumber + " - " + hotelAvailability.getName().getName());
 				System.out.println("Getting data for room: " + roomGrouping.getRoomDescription() + " - " + roomNumber + " - " + hotelAvailability.getName().getName());
-//				String roomNumber = fullRoomNumber.split("-")[1].trim();
 				String fullRoomNumber = roomGrouping.getRoomDescription() + " - " + roomNumber;
 				String url;
 				if (propertyCode.isPresent()) {
@@ -224,9 +222,7 @@ public class BigWhite {
 			Calendar currentDate = new GregorianCalendar(currentYearMonth.getYear(), currentYearMonth.getMonthValue() - 1,
 					startDate.get(Calendar.DAY_OF_MONTH));
 			Calendar lowerDateLimit = (Calendar) startDate.clone();
-			String lowerDateLimitString = DateUtils.getReadableDateString(lowerDateLimit);
 			while(!lowerDateLimit.after(endDate)) {
-				String currentDateString = DateUtils.getReadableDateString(currentDate);
 				requestDates.add(currentDate);
 				currentYearMonth = DateUtils.getYearMonthFromDate(currentDate).plusMonths(4);
 
@@ -235,7 +231,6 @@ public class BigWhite {
 				currentDate.set(Calendar.MONTH, currentYearMonth.getMonthValue() - 1);
 				lowerDateLimit = new GregorianCalendar(currentYearMonth.minusMonths(1).getYear(),
 						currentYearMonth.minusMonths(1).getMonthValue() - 1, 1);
-				lowerDateLimitString = DateUtils.getReadableDateString(lowerDateLimit);
 			}
 		}
 		return requestDates;
@@ -255,38 +250,10 @@ public class BigWhite {
 				}
 			}
 
-			RoomAvailability aggregatedRoomAvailability = getAggregatedRoomAvailability(groupedRoomAvailabilities, startDate, endDate);
+			RoomAvailability aggregatedRoomAvailability = AggregatorUtils.getAggregatedRoomAvailability(groupedRoomAvailabilities, startDate, endDate);
 			aggregatedRoomAvailabilities.put(roomDescription, aggregatedRoomAvailability);
 		});
 		return aggregatedRoomAvailabilities;
-	}
-
-	private static RoomAvailability getAggregatedRoomAvailability(Map<String, RoomAvailability> groupedRoomAvailabilities,
-			Calendar startDate, Calendar endDate) {
-		Map<Calendar, Optional<Boolean>> newTotalAvailability = new HashMap<Calendar, Optional<Boolean>>();
-		String roomDescription = groupedRoomAvailabilities.keySet().stream().findFirst().get().split("-")[0].trim();
-		if (!groupedRoomAvailabilities.keySet().stream().anyMatch(roomAvailability -> roomAvailability.split("-")[0].trim().equals(roomDescription))) {
-			throw new RuntimeException("Error: cannot convert room availability set to aggregated format because the room descriptions do not all match");
-		}
-
-		DateUtils.getDateRange(startDate, endDate).forEach(date -> {
-			Optional<Boolean> isRoomTypeAvailable;
-
-			Set<Optional<Boolean>> availabilitySet = groupedRoomAvailabilities.values().stream().map(roomAvailability -> roomAvailability.isAvailableOnDate(date)).collect(Collectors.toSet());
-			if (availabilitySet.stream().anyMatch(availability -> availability.isPresent() && availability.get().equals(true))) {
-				// At least one available
-				isRoomTypeAvailable = Optional.of(true);
-			} else if (availabilitySet.stream().anyMatch(availability -> !availability.isPresent())) {
-				// At least one blocked
-				isRoomTypeAvailable = Optional.empty();
-			} else {
-				// All unavailable
-				isRoomTypeAvailable = Optional.of(false);
-			}
-
-			newTotalAvailability.put(date, isRoomTypeAvailable);
-		});
-		return new RoomAvailability(roomDescription, newTotalAvailability);
 	}
 
 	private static Set<String> getUniqueRoomDescriptions(Set<String> roomAvailabilities) {
@@ -343,7 +310,6 @@ public class BigWhite {
 	}
 
 	private static void readRoomDataFromFile(String filePath, Map<String, Object> roomsData) throws IOException {
-//		List<String> fullRoomNumbers = new ArrayList<String>();
 		List<CirrusRoomGrouping> cirrusRoomGroupings = new ArrayList<CirrusRoomGrouping>();
 		ObjectMapper objectMapper = new ObjectMapper();
 		String fileText = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -360,7 +326,6 @@ public class BigWhite {
 		roomsData.put(ROOM_NUMBER_CODE_KEY, roomNumberCode);
 		roomsData.put(RESORT_CODE_KEY, resortCode);
 
-//		ObjectNode roomNumberData = (ObjectNode) root.get(ROOM_NUMBERS_KEY);
 		ArrayNode roomGroupingData = (ArrayNode) root.get(ROOM_NUMBERS_KEY);
 		Iterator<JsonNode> roomGroupingsIterator = roomGroupingData.iterator();
 		while (roomGroupingsIterator.hasNext()) {
@@ -368,14 +333,6 @@ public class BigWhite {
 			cirrusRoomGroupings.add(objectMapper.readValue(cirrusRoomGrouping, CirrusRoomGrouping.class));
 		}
 
-//		CirrusRoomGrouping[] groupingsArray = objectMapper.readValue(roomGroupingData, CirrusRoomGrouping[].class);
-//		roomNumberData.fields().forEachRemaining(field -> {
-//			ArrayNode roomNumbers = (ArrayNode) field.getValue();
-//			roomNumbers.forEach(roomNumber -> {
-//				fullRoomNumbers.add(field.getKey() + " - " + roomNumber.asText());
-//			});
-//		});
-//		roomsData.put(ROOM_NUMBERS_KEY, fullRoomNumbers);
 		roomsData.put(ROOM_NUMBERS_KEY, cirrusRoomGroupings);
 	}
 }
