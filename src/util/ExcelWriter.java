@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import jxl.write.Number;
 import jxl.write.WriteException;
@@ -32,14 +33,14 @@ import model.RoomAvailability;
 public class ExcelWriter {
 
 	public static final String EXCEL_FILE_PATH = System.getProperty("user.dir") + "/resources/ExcelOutput/";
-	private static final int DATE_STARTING_COLUMN = 3;  //arbitrary; very first column is 3
+	private static final int DATE_STARTING_COLUMN = 4;  //arbitrary; first date column
 
 	public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
 		writeHotelAvailability(hotelAvailability, false);
 	}
 	
 //    public static void writeHotelAvailability(HotelAvailability hotelAvailability) throws Exception {
-	public static void writeHotelAvailability(HotelAvailability hotelAvailability, boolean cirrusAggregation) throws Exception {
+	public static void writeHotelAvailability(HotelAvailability hotelAvailability, boolean aggregateForCirrus) throws Exception {
     	
         HotelName hotelName = hotelAvailability.getName();
         String folderPath = EXCEL_FILE_PATH + hotelName.getResortName().getDisplayName();
@@ -62,15 +63,25 @@ public class ExcelWriter {
             // add the title into the sheet
             Label property = new Label(0, 0, hotelAvailability.getName().getDisplayName());
             excelSheet.addCell(property);
+
+            String descriptionHeaderText = aggregateForCirrus ? "Room Description" : "Room number";
+            Label descriptionHeader = new Label(1, 2, descriptionHeaderText);
+            excelSheet.addCell(descriptionHeader);
+
+            if (aggregateForCirrus) {
+                Label cirrusIdHeader = new Label(2, 2, "Cirrus ID");
+                excelSheet.addCell(cirrusIdHeader);
+                Label roomNumbersHeader = new Label(3, 2, "Room Numbers");
+                excelSheet.addCell(roomNumbersHeader);
+            }
             writeAllDateLabels(excelSheet, earliestDate, latestDate);
             //cycle through each room by unit number in the map of all rooms, update each of their availability in excel sheet under corresponding date
 
-            if (cirrusAggregation) {
+            if (aggregateForCirrus) {
             	writeAggregatedAvailabilityForAllRooms(excelSheet, hotelAvailability.getGroupedRoomAvailabilities(), earliestDate, latestDate);
             } else {
             	writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
             }
-//            writeAvailabilityForAllRooms(excelSheet, roomAvailabilities, earliestDate, latestDate);
 
             myFirstWbook.write();
         } catch (Exception e) {
@@ -150,8 +161,12 @@ public class ExcelWriter {
     		Calendar earliestDate, Calendar latestDate) throws RowsExceededException, WriteException {
         int row = DATE_STARTING_COLUMN;
         for (CirrusRoomGrouping roomGrouping : groupedRoomAvailabilities){  //for all unit numbers (rooms) in the map
-            Label propertynum = new Label(1, row, roomGrouping.getRoomDescription());
-            excelSheet.addCell(propertynum);
+            Label roomDescription = new Label(1, row, roomGrouping.getRoomDescription());
+            excelSheet.addCell(roomDescription);
+            Label cirrusId = createCenteredCellLabel(2, row, Integer.toString(roomGrouping.getCirrusId()));
+            excelSheet.addCell(cirrusId);
+            Label roomNumbers = createCenteredCellLabel(3, row, roomGrouping.getRoomNumbers().stream().collect(Collectors.joining(", ")));
+            excelSheet.addCell(roomNumbers);
             writeAggregatedAvailabilityForRoom(excelSheet, roomGrouping, row, earliestDate, latestDate);
             row++;
         }
