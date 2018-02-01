@@ -1,0 +1,97 @@
+{
+  "resortCode" : "03",
+  "roomNumberCode" : "CB",
+//  "rooms": {
+//    "1 Bdrm Hotel CBW" : [
+//      "306",
+//      "404",
+//      "406",
+//      "415"
+//    ],
+//    "1 Bdrm Plus Den Hotel CBW" : [
+//      "305",
+//      "308",
+//      "312",
+//      "409"
+//    ],
+//    "2 Bdrm Plus Den Hotel" : [
+//      "108"
+//    ],
+//    "Loft Kitchenette" : [
+//      "201",
+//      "203",
+//      "204",
+//      "205",
+//      "206",
+//      "207",
+//      "208",
+//      "209",
+//      "210",
+//      "214",
+//      "216",
+//      "218",
+//      "220",
+//      "222",
+//      "224"
+//    ],
+//    "Superior CBW" : [
+//      "411"
+//    ],
+//    "Superior Kitchenette CBW" : [
+//      "110",
+//      "112",
+//      "311",
+//      "316",
+//      "318",
+//      "320",
+//      "322",
+//      "402"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "4742",
+    "roomDescription": "2 Bdrm Plus Den Hotel",
+    "roomNumbers" : [ "108" ]
+  }, {
+    "cirrusId": "4738",
+    "roomDescription": "1 Bdrm Plus Den Hotel CBW",
+    "roomNumbers" : [ "305" ]
+  }, {
+    "cirrusId": "4739",
+    "roomDescription": "1 Bdrm Plus Den Hotel CBW",
+    "roomNumbers" : [ "308" ]
+  }, {
+    "cirrusId": "4741",
+    "roomDescription": "1 Bdrm Plus Den Hotel CBW",
+    "roomNumbers" : [ "312" ]
+  }, {
+    "cirrusId": "4744",
+    "roomDescription": "Superior Kitchenette CBW",
+    "roomNumbers" : [ "322" ]
+  }, {
+    "cirrusId": "4740",
+    "roomDescription": "1 Bdrm Plus Den Hotel CBW",
+    "roomNumbers" : [ "409" ]
+  }, {
+    "cirrusId": "4737",
+    "roomDescription": "1 Bdrm Hotel CBW",   //for 4
+    "roomNumbers" : [ "404", "406" ]
+  }, {
+    "cirrusId": "4736",
+    "roomDescription": "1 Bdrm Hotel CBW",
+    "roomNumbers" : [ "306", "415" ]
+  }, {
+    "cirrusId": "4743",
+    "roomDescription": "Loft Kitchenette",
+    "roomNumbers" : [ "201", "203", "205", "206", "207", "208", "209", "210", "214", "216", "218", "220", "222", "224" ]
+  }, {
+    "cirrusId": "4745",
+    "roomDescription": "Superior Kitchenette CBW",   //for 4
+    "roomNumbers" : [ "112", "311", "316", "320", "402"  ]
+  }, {
+    "cirrusId": "4746",
+    "roomDescription": "Superior Kitchenette CBW",
+    "roomNumbers" : [ "110", "318" ]
+  }]
+}

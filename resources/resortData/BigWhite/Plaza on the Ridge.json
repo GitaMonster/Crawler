@@ -1,15 +1,33 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "PL",
-  "rooms": {
-    "2 Bdrm Regular" : [
-      "334",
-      "335",
-      "449"
-    ],
-    "3/4 Bdrm Regular" : [
-      "216",
-      "322"
-    ]
-  }
+//  "rooms": {
+//    "2 Bdrm Regular" : [
+//      "334",
+//      "335",
+//      "449"
+//    ],
+//    "3/4 Bdrm Regular" : [
+//      "216",
+//      "322"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "493",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "216" ]
+  }, {
+    "cirrusId": "906",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "322" ]
+  }, {
+    "cirrusId": "905",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "334" ]
+  }, {
+    "cirrusId": "4814",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "335", "449" ]
+  }]
 }

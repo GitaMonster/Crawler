@@ -1,0 +1,17 @@
+{
+  "resortCode" : "01",
+  "roomNumberCode" : "WO",
+//  "rooms": {
+//    "2 Bdrm Vacation Home w/Hot tub" : [
+//      "13",
+//      "16",
+//      "17"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "4619",
+    "roomDescription": "2 Bdrm Vacation Home w/Hot tub",
+    "roomNumbers" : [ "13", "16", "17" ]
+  }]
+}

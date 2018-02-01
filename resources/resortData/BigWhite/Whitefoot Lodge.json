@@ -1,54 +1,112 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "WH",
-  "rooms": {
-    "1 Bdrm Regular" : [
-      "108",
-      "208",
-      "210",
-      "220",
-      "223",
-      "227",
-      "233",
-      "333",
-      "342"
-    ],
-    "1 Bdrm Standard" : [
-      "107",
-      "123"
-    ],
-    "2 Bdrm Regular" : [
-      "131",
-      "231",
-      "334",
-      "339",
-      "340",
-      "347"
-    ],
-    "Budget" : [
-      "103",
-      "113",
-      "117",
-      "122",
-      "126",
-      "129",
-      "203",
-      "216",
-      "217",
-      "315"
-    ],
-    "Kitchenette" : [
-      "118",
-      "212",
-      "312",
-      "316"
-    ],
-    "Studio" : [
-      "105",
-      "205",
-      "207",
-      "211",
-      "306"
-    ]
-  }
+//  "rooms": {
+//    "1 Bdrm Regular" : [
+//      "108",
+//      "208",
+//      "210",
+//      "220",
+//      "223",
+//      "227",
+//      "233",
+//      "333",
+//      "342"
+//    ],
+//    "1 Bdrm Standard" : [
+//      "107",
+//      "123"
+//    ],
+//    "2 Bdrm Regular" : [
+//      "131",
+//      "231",
+//      "334",
+//      "339",
+//      "340",
+//      "347"
+//    ],
+//    "Budget" : [
+//      "103",
+//      "113",
+//      "117",
+//      "122",
+//      "126",
+//      "129",
+//      "203",
+//      "216",
+//      "217",
+//      "315"
+//    ],
+//    "Kitchenette" : [
+//      "118",
+//      "212",
+//      "312",
+//      "316"
+//    ],
+//    "Studio" : [
+//      "105",
+//      "205",
+//      "207",
+//      "211",
+//      "306"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "924",
+    "roomDescription": "Studio",
+    "roomNumbers" : [ "207" ]
+  }, {
+    "cirrusId": "923",
+    "roomDescription": "Kitchenette",
+    "roomNumbers" : [ "212" ]
+  }, {
+    "cirrusId": "4751",
+    "roomDescription": "1 Bdrm Regular",
+    "roomNumbers" : [ "220" ]
+  }, {
+    "cirrusId": "4805",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "231" ]
+  }, {
+    "cirrusId": "4747",
+    "roomDescription": "Studio",
+    "roomNumbers" : [ "306" ]
+  }, {
+    "cirrusId": "4806",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "334" ]
+  }, {
+    "cirrusId": "494",
+    "roomDescription": "1 Bdrm Regular",
+    "roomNumbers" : [ "108", "333", "208", "233", "223" ]
+  }, {
+    "cirrusId": "4750",
+    "roomDescription": "1 Bdrm Regular",
+    "roomNumbers" : [ "210", "227", "342" ]
+  }, {
+    "cirrusId": "925",
+    "roomDescription": "1 Bdrm Standard",
+    "roomNumbers" : [ "107", "123" ]
+  }, {
+    "cirrusId": "4752",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "339", "347" ]
+  }, {
+    "cirrusId": "926",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "131", "340" ]
+  }, {
+    "cirrusId": "922",
+    "roomDescription": "Budget",
+    "roomNumbers" : [ "103", "113", "117", "122", "126", "128", "129", "203", "216", "217", "315" ]
+  }, {
+    "cirrusId": "4749",
+    "roomDescription": "Kitchenette",
+    "roomNumbers" : [ "118", "312", "316" ]
+  }, {
+    "cirrusId": "4748",
+    "roomDescription": "Studio",
+    "roomNumbers" : [ "105", "205", "211" ]
+  }]
 }

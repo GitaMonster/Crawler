@@ -1,29 +1,69 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "CK",
-  "rooms": {
-    "2 Bdrm Plus Den Premium w/Hot Tub" : [
-      "108",
-      "112",
-      "204",
-      "205",
-      "207",
-      "209",
-      "210",
-      "213",
-      "310",
-      "313"
-    ],
-    "3 Bdrm Plus Den Premium w/Hot Tub" : [
-      "311"
-    ],
-    "3 Bdrm Premium w/Hot Tub" : [
-      "114",
-      "211",
-      "214"
-    ],
-    "4 Bdrm Premium w/Hot Tub" : [
-      "101"
-    ]
+//  "rooms": {
+//    "2 Bdrm Plus Den Premium w/Hot Tub" : [
+//      "108",
+//      "112",
+//      "204",
+//      "205",
+//      "207",
+//      "209",
+//      "210",
+//      "213",
+//      "310",
+//      "313"
+//    ],
+//    "3 Bdrm Plus Den Premium w/Hot Tub" : [
+//      "311"
+//    ],
+//    "3 Bdrm Premium w/Hot Tub" : [
+//      "114",
+//      "211",
+//      "214"
+//    ],
+//    "4 Bdrm Premium w/Hot Tub" : [
+//      "101"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "899",
+    "roomDescription": "4 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "101" ]
+  }, {
+    "cirrusId": "232",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "112" ]
+  }, {
+    "cirrusId": "233",
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "114" ]
+  }, {
+    "cirrusId": "4837",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "205" ]
+  }, {
+    "cirrusId": "4836",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "310" ]
+  }, {
+    "cirrusId": "4838",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub", //for 8
+    "roomNumbers" : [ "108", "204", "207", "313", "213" ]
+  }, {
+    "cirrusId": "4839",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",  //for 9
+    "roomNumbers" : [ "209", "210" ]
+  }, {
+    "cirrusId": "898",
+    "roomDescription": "3 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "311" ]
+  }, {
+    "cirrusId": "4835",
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "211" , "214" ]
   }
+
+  ]
 }

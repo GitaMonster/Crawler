@@ -1,16 +1,30 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "TP",
-  "rooms": {
-    "2 Bdrm Premium w/Hot Tub" : [
-      "03"
-    ],
-    "3 Bdrm Premium w/Hot Tub" : [
-      "09",
-      "11"
-    ],
-    "4 Bdrm Premium w/Hot Tub" : [
-      "07"
-      ]
-  }
+//  "rooms": {
+//    "2 Bdrm Premium w/Hot Tub" : [
+//      "03"
+//    ],
+//    "3 Bdrm Premium w/Hot Tub" : [
+//      "09",
+//      "11"
+//    ],
+//    "4 Bdrm Premium w/Hot Tub" : [
+//      "07"
+//      ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "919",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "03" ]
+  }, {
+    "cirrusId": "378",
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "09", "11" ]
+  }, {
+    "cirrusId": "920",
+    "roomDescription": "4 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "07" ]
+  }]
 }

@@ -1,0 +1,15 @@
+{
+  "resortCode" : "01",
+  "roomNumberCode" : "SL",
+//  "rooms": {
+  //    "2 Bdrm Premium w/Hot Tub" : [
+  //      "101"
+  //    ]
+  //  }
+
+  "rooms": [{
+    "cirrusId": "3964",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "101" ]
+  }]
+}

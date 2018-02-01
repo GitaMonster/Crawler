@@ -1,36 +1,74 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "TC",
-  "rooms": {
-    "1 Bdrm Plus Den Premium w/Hot Tub" : [
-      "25"
-    ],
-    "1 Bdrm Premium w/Hot Tub" : [
-      "10",
-      "19",
-      "21",
-      "23",
-      "27",
-      "31",
-      "33"
-    ],
-    "2 Bdrm Plus Loft Premium w/Hot Tub" : [
-      "01"
-    ],
-    "2 Bdrm Premium w/Hot Tub" : [
-      "02",
-      "07",
-      "41"
-    ],
-    "3 Bdrm Plus Loft Premium w/Hot Tub" : [
-      "11",
-      "17",
-      "38"
-    ],
-    "3 Bdrm Premium w/Hot Tub" : [
-      "22",
-      "26",
-      "42"
-    ]
-  }
+//  "rooms": {
+//    "1 Bdrm Plus Den Premium w/Hot Tub" : [
+//      "25"
+//    ],
+//    "1 Bdrm Premium w/Hot Tub" : [
+//      "10",
+//      "19",
+//      "21",
+//      "23",
+//      "27",
+//      "31",
+//      "33"
+//    ],
+//    "2 Bdrm Plus Loft Premium w/Hot Tub" : [
+//      "01"
+//    ],
+//    "2 Bdrm Premium w/Hot Tub" : [
+//      "02",
+//      "07",
+//      "41"
+//    ],
+//    "3 Bdrm Plus Loft Premium w/Hot Tub" : [
+//      "11",
+//      "17",
+//      "38"
+//    ],
+//    "3 Bdrm Premium w/Hot Tub" : [
+//      "22",
+//      "26",
+//      "42"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "462",
+    "roomDescription": "3 Bdrm Plus Loft Premium w/Hot Tub",
+    "roomNumbers" : [ "11" ]
+  }, {
+    "cirrusId": "480",
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "22" ]
+  }, {
+    "cirrusId": "4616",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "41" ]
+  }, {
+    "cirrusId": "921",
+    "roomDescription": "1 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "25" ]
+  }, {
+    "cirrusId": "649",
+    "roomDescription": "1 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "10", "19", "21", "23", "27", "31", "33" ]
+  }, {
+    "cirrusId": "477",
+    "roomDescription": "2 Bdrm Plus Loft Premium w/Hot Tub",
+    "roomNumbers" : [ "01", "08" ]
+  }, {
+    "cirrusId": "476",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "02", "07" ]
+  }, {
+    "cirrusId": "4617",
+    "roomDescription": "3 Bdrm Plus Loft Premium w/Hot Tub",
+    "roomNumbers" : [ "17", "38" ]
+  }, {
+    "cirrusId": "4618",
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "26", "42" ]
+  }]
 }

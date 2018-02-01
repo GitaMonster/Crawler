@@ -1,13 +1,27 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "SN",
-  "rooms": {
-    "2 Bdrm Plus Den Premium w/Hot Tub" : [
-      "04",
-      "06"
-    ],
-    "3 Bdrm Plus Loft Premium w/Hot Tub" : [
-      "10"
-    ]
-  }
+//  "rooms": {
+  //    "2 Bdrm Plus Den Premium w/Hot Tub" : [
+  //      "04",
+  //      "06"
+  //    ],
+  //    "3 Bdrm Plus Loft Premium w/Hot Tub" : [
+  //      "10"
+  //    ]
+  //  }
+
+  "rooms": [{
+    "cirrusId": "909",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "04" ]
+  }, {
+    "cirrusId": "4812",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "06" ]
+  }, {
+    "cirrusId": "738",
+    "roomDescription": "3 Bdrm Plus Loft Premium w/Hot Tub",
+    "roomNumbers" : [ "09", "10" ]
+  }]
 }

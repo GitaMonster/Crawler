@@ -1,13 +1,35 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "EG",
-  "rooms": {
-    "3/4 Bdrm Regular" : [
-      "305",
-      "308",
-      "502",
-      "505",
-      "513"
-      ]
-  }
+//  "rooms": {
+//    "3/4 Bdrm Regular" : [
+//      "305",
+//      "308",
+//      "502",
+//      "505",
+//      "513"
+//      ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "237",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "305" ]
+  }, {
+    "cirrusId": "4611",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "308" ]
+  }, {
+    "cirrusId": "4612",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "502" ]
+  }, {
+    "cirrusId": "4613",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "505" ]
+  }, {
+    "cirrusId": "4614",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "513" ]
+  }]
 }

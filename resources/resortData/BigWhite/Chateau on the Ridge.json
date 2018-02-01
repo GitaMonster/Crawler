@@ -1,13 +1,23 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "CH",
-  "rooms": {
-    "2 Bdrm Regular" : [
-      "206",
-      "310"
-    ],
-    "2 Bdrm Executive" : [
-      "409"
-    ]
-  }
+//  "rooms": {
+//    "2 Bdrm Regular" : [
+//      "206",
+//      "310"
+//    ],
+//    "2 Bdrm Executive" : [
+//      "409"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "230",
+    "roomDescription": "2 Bdrm Regular",
+    "roomNumbers" : [ "206", "310" ]
+  }, {
+    "cirrusId": "231",
+    "roomDescription": "3/4 Bdrm Regular",
+    "roomNumbers" : [ "409" ]
+  }]
 }

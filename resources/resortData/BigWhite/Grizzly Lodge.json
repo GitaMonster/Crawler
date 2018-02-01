@@ -1,36 +1,78 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "GL",
-  "rooms": {
-    "1 Bdrm Plus Den Premium" : [
-      "105",
-      "204",
-      "205",
-      "305"
-    ],
-    "1 Bdrm Premium" : [
-      "303"
-    ],
-    "1 Bdrm Premium w/Hot Tub" : [
-      "203"
-    ],
-    "2 Bdrm Plus Den Premium" : [
-      "302",
-      "306"
-    ],
-    "2 Bdrm Plus Den Premium w/Hot Tub" : [
-      "206"
-    ],
-    "2 Bdrm Premium" : [
-      "307"
-    ],
-    "2 Bdrm Premium w/Hot Tub" : [
-      "107",
-      "207"
-    ],
-    "Studio Premium" : [
-      "103",
-      "106"
-    ]
-  }
+//  "rooms": {
+//    "1 Bdrm Plus Den Premium" : [
+//      "105",
+//      "204",
+//      "205",
+//      "305"
+//    ],
+//    "1 Bdrm Premium" : [
+//      "303"
+//    ],
+//    "1 Bdrm Premium w/Hot Tub" : [
+//      "203"
+//    ],
+//    "2 Bdrm Plus Den Premium" : [
+//      "302",
+//      "306"
+//    ],
+//    "2 Bdrm Plus Den Premium w/Hot Tub" : [
+//      "206"
+//    ],
+//    "2 Bdrm Premium" : [
+//      "307"
+//    ],
+//    "2 Bdrm Premium w/Hot Tub" : [
+//      "107",
+//      "207"
+//    ],
+//    "Studio Premium" : [
+//      "103",
+//      "106"
+//    ]
+//  }
+
+  "rooms": [{
+    "cirrusId": "903",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "107" ]
+  }, {
+    "cirrusId": "902",
+    "roomDescription": "1 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "203" ]
+  }, {
+    "cirrusId": "904",
+    "roomDescription": "2 Bdrm Plus Den Premium w/Hot Tub",
+    "roomNumbers" : [ "206" ]
+  }, {
+    "cirrusId": "4827",
+    "roomDescription": "2 Bdrm Premium w/Hot Tub",
+    "roomNumbers" : [ "207" ]
+  }, {
+    "cirrusId": "700",
+    "roomDescription": "2 Bdrm Plus Den Premium",
+    "roomNumbers" : [ "302" ]
+  }, {
+    "cirrusId": "901",
+    "roomDescription": "1 Bdrm Premium",
+    "roomNumbers" : [ "303" ]
+  }, {
+    "cirrusId": "4828",
+    "roomDescription": "2 Bdrm Plus Den Premium",
+    "roomNumbers" : [ "306" ]
+  }, {
+    "cirrusId": "468",
+    "roomDescription": "2 Bdrm Premium",
+    "roomNumbers" : [ "307" ]
+  }, {
+    "cirrusId": "467",
+    "roomDescription": "1 Bdrm Plus Den Premium",
+    "roomNumbers" : [ "105", "204", "205", "305" ]
+  }, {
+    "cirrusId": "900",
+    "roomDescription": "Studio Premium",
+    "roomNumbers" : [ "103", "106" ]
+  }]
 }
