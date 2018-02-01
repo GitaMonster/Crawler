@@ -1,17 +1,6 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "BL",
-//  "rooms": {
-//    "3 Bdrm Premium w/Hot Tub" : [
-//      "02",
-//      "03",
-//      "04",
-//      "07",
-//      "08",
-//      "10",
-//      "11"
-//    ]
-//  }
 
   "rooms": [{
     "cirrusId": "4834",
@@ -19,7 +8,7 @@
     "roomNumbers" : [ "10" ]
   }, {
     "cirrusId": "4833",
-    "roomDescription": "3 Bdrm Premium w/Hot Tub",  //for 10
+    "roomDescription": "3 Bdrm Premium w/Hot Tub",
     "roomNumbers" : [ "02" , "07" ]
   }, {
     "cirrusId": "4832",

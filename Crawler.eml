@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/Crawler"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="jackson-annotations-2.9.0" value="project"/>
+		<level name="jackson-core-2.9.0" value="project"/>
+		<level name="jackson-databind-2.9.0" value="project"/>
+		<level name="jxl" value="project"/>
+		<level name="jsoup-1.10.3" value="project"/>
+		<level name="javax.mail" value="project"/>
+	</levels>
+</component>

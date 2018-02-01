@@ -1,15 +1,6 @@
 {
   "resortCode" : "01",
   "roomNumberCode" : "EG",
-//  "rooms": {
-//    "3/4 Bdrm Regular" : [
-//      "305",
-//      "308",
-//      "502",
-//      "505",
-//      "513"
-//      ]
-//  }
 
   "rooms": [{
     "cirrusId": "237",
