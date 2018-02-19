@@ -18,15 +18,16 @@ import javax.net.ssl.HttpsURLConnection;
 import model.HotelName;
 import model.ResortAvailability;
 import model.ResortName;
-import model.RoomAvailability;
 import parser.SilverStarParser;
 import util.DateUtils;
+import util.EmailAttachmentSender;
 import util.ExcelWriter;
 
 public class SilverStar {
 
 	public static final Calendar FIRST_DATE_OF_SEASON = Calendar.getInstance();
 	public static final Calendar FINAL_DATE_OF_SEASON = new GregorianCalendar(2018, 3, 8);
+	private static final boolean SEND_EMAILS = true;
 
 	public static void main(String[] args) throws Exception {
 
@@ -35,17 +36,17 @@ public class SilverStar {
 
 		ResortAvailability resortAvailability = getFullAvailability(startDate, endDate);
 
-		String roomNumber = "1 Bedroom Executive";
-		RoomAvailability roomAvailability = resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SNOWBIRD).getAvailabilityForRoomNumber(roomNumber);
-		System.out.println("\nAvailable dates for 1 Bedroom Executive:");
-		roomAvailability.getAvailableDates().forEach(date -> System.out.println(DateUtils.getReadableDateString(date)));
-
 		// Write to excel file
 		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SNOWBIRD));
 		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_FIRELIGHT));
 		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_LORD_ABERDEEN));
 		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_SILVER_CREEK));
 		ExcelWriter.writeHotelAvailability(resortAvailability.getAvailabilityForHotel(HotelName.SILVER_STAR_VACATION_HOMES));
+
+		if (SEND_EMAILS) {
+			Set<HotelName> hotelsToGet = resortAvailability.getHotelAvailabilities().keySet();
+			EmailAttachmentSender.main(hotelsToGet);
+		}
 	}
 
 	public static ResortAvailability getFullAvailability(Calendar startDate, Calendar endDate) throws MalformedURLException, IOException {
